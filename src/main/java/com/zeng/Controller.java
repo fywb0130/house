@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.RestController;
  * Created by zengqiang on 2017/8/11.
  */
 @RestController
-public class LianjiaController {
+public class Controller {
 
-    @RequestMapping("result")
+    @RequestMapping("lj")
     public String result() {
-        return "result";
+        return "lj";
     }
 }
