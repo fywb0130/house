@@ -1,0 +1,456 @@
+package com.zeng.house;
+
+import java.util.Date;
+import java.util.Map;
+import java.util.TreeMap;
+
+public class House {
+    /**
+     * 权重
+     */
+    private static int priceW = 8;      //单价
+    private static int totalW = 9;      //总价
+    private static int sizeW = 8;       //面积
+    private static int floorW = 7;      //楼层
+    private static int ageW = 8;        //房屋年代
+    private static int shapeW = 8;      //户型
+    private static int priceDiffW = 10; //与参加单价差值
+    private static int lastSaleW = 9;   //上次交易时间
+    private static int positionW = 9;   //位置
+    private static int putOutW = 8;     //挂牌时间
+    private static int directionW = 5;  //朝向
+    private static int decorateW = 12;  //装修
+
+    /**
+     * 分值规则
+     */
+    private static Map<String, Integer> floorV;
+    private static Map<String, Integer> positionV;
+    private static Map<String, Integer> directionV;
+    private static Map<String, Integer> decorateV;
+
+    /**
+     * 楼层枚举：低楼层，中楼层，高楼层
+     */
+    private static final String FLOOR_LOW = "低", FLOOR_MIDDLE = "中", FLOOR_HIGH = "高";
+    /**
+     * 位置枚举：白沙洲，老南湖，南湖沃尔玛，新南湖，珞狮南路，三环南，汤逊湖藏龙岛，
+     * 金融港，光谷南，民族大道，关山大道，华科大，关西长职
+     */
+    private static final String POSITION_BSZ = "白沙洲", POSITION_LNH = "老南湖", POSITION_NHWEM = "南湖沃尔玛",
+            POSITION_XNH = "新南湖", POSITION_LSNL = "珞狮南路", POSITION_SHN = "三环南", POSITION_TXHCLD = "汤逊湖藏龙岛",
+            POSITION_JRG = "金融港", POSITION_GGN = "光谷南", POSITION_MZDD = "民族大道", POSITION_GSDD = "关山大道",
+            POSITION_HKD = "华科大", POSITION_GXCZ = "关西长职";
+    /**
+     * 朝向枚举：南北，东西
+     */
+    private static final String DIRECTION_NB = "南北", DIRECTION_DX = "东西";
+    /**
+     * 装修枚举：毛坯，简装，精装
+     */
+    private static final String DECORATE_NO = "毛坯", DECORATE_SAMPLE = "简装", DECORATE_GOOD = "精装";
+    /**
+     * 枚举缺省值
+     */
+    private static final String OTHER = "其他";
+
+    static {
+        floorV = new TreeMap<>();
+        floorV.put(FLOOR_LOW, 70);
+        floorV.put(FLOOR_MIDDLE, 100);
+        floorV.put(FLOOR_HIGH, 50);
+        floorV.put(OTHER, 60);
+        positionV = new TreeMap<>();
+        positionV.put(POSITION_BSZ, 50);
+        positionV.put(POSITION_LNH, 80);
+        positionV.put(POSITION_NHWEM, 90);
+        positionV.put(POSITION_XNH, 100);
+        positionV.put(POSITION_LSNL, 70);
+        positionV.put(POSITION_SHN, 70);
+        positionV.put(POSITION_TXHCLD, 60);
+        positionV.put(POSITION_JRG, 75);
+        positionV.put(POSITION_GGN, 75);
+        positionV.put(POSITION_MZDD, 80);
+        positionV.put(POSITION_GSDD, 85);
+        positionV.put(POSITION_HKD, 80);
+        positionV.put(POSITION_GXCZ, 85);
+        positionV.put(OTHER, 0);
+        directionV = new TreeMap<>();
+        directionV.put(DIRECTION_NB, 100);
+        directionV.put(DIRECTION_DX, 0);
+        directionV.put(OTHER, 50);
+        decorateV = new TreeMap<>();
+        decorateV.put(DECORATE_NO, 0);
+        decorateV.put(DECORATE_SAMPLE, 70);
+        decorateV.put(DECORATE_GOOD, 100);
+        decorateV.put(OTHER, 50);
+    }
+
+    private String price;
+    private float priceF;
+    private String total;
+    private float totalF;
+    private String size;
+    private float sizeF;
+    private String floor;
+    private String age;
+    private String shape;
+    private String priceAvg;
+    private float priceAvgF;
+    private String lastSale;
+    private String position;
+    private String putOut;
+    private String direction;
+    private String decorate;
+
+    public int calculate() {
+        int priceP = getPricePoint(price);
+        int totalP = getTotalPoint(total);
+        int sizeP = getSizePoint(size);
+        int ageP = getAgePoint(age);
+        int shapeP = getShapePoint(shape);
+        int floorP = getFloorPoint(floor);
+        int priceDiffP = null == priceAvg ? 0 : (int) ((priceAvgF - priceF) / 13.0);
+        int lastSaleP = getLastSalePoint(lastSale);
+        int positionP = getPositionPoint(position);
+        int putOutP = getPutOutPoint(putOut);
+        int directionP = getDirectionPoint(direction);
+        int decorateP = getDecoratePoint(decorate);
+
+        return priceP * priceW
+                + totalP * totalW
+                + sizeP * sizeW
+                + floorP * floorW
+                + ageP * ageW
+                + shapeP * shapeW
+                + priceDiffP * priceDiffW
+                + lastSaleP * lastSaleW
+                + positionP * positionW
+                + putOutP * putOutW
+                + directionP * directionW
+                + decorateP * decorateW;
+    }
+
+    private int getDecoratePoint(String decorate) {
+        if (null != decorate && !decorate.isEmpty()) {
+            if (decorate.contains("毛")) {
+                return decorateV.get(DECORATE_NO);
+            } else if (decorate.contains("简")) {
+                return decorateV.get(DECORATE_SAMPLE);
+            } else if (decorate.contains("精")) {
+                return decorateV.get(DECORATE_GOOD);
+            }
+        }
+        return decorateV.get(OTHER);
+    }
+
+    private int getPricePoint(String price) {
+        if (null == price || price.isEmpty()) {
+            return 0;
+        }
+        return (int) ((13000 - priceF) / 30.0);
+    }
+
+    private int getSizePoint(String size) {
+        if (null == size || size.isEmpty()) {
+            return 0;
+        }
+        return (int) ((sizeF - 50) * 2);
+    }
+
+    private int getTotalPoint(String total) {
+        if (null == total || total.isEmpty()) {
+            return 0;
+        }
+        return (int) ((150 - totalF) / 0.4);
+    }
+
+    private int getDirectionPoint(String direction) {
+        if (null == direction || direction.isEmpty()) {
+            return directionV.get(OTHER);
+        }
+        if (direction.contains("南")) {
+            return directionV.get(DIRECTION_NB);
+        } else if (direction.contains("东") || direction.contains("西")) {
+            return directionV.get(DIRECTION_DX);
+        } else if (direction.contains("北")) {
+            return directionV.get(DIRECTION_DX);
+        }
+        return directionV.get(OTHER);
+    }
+
+    private int getPutOutPoint(String putOut) {
+        if (null == putOut || putOut.isEmpty()) {
+            return 0;
+        }
+        int year = Integer.parseInt(putOut.substring(0, 4))
+                , month = Integer.parseInt(putOut.substring(5, 7))
+                , day = Integer.parseInt(putOut.substring(8, 10));
+        float putOutF = (float) (year + month / 12.0 + day / 365.0);
+        Date nowD = new Date();
+        int y = nowD.getYear() + 1900, m = nowD.getMonth() + 1, d = nowD.getDate();
+        float nowF = (float) (y + m / 12.0 + d / 365.0);
+        return (int) (((putOutF - nowF) * 365 + 60) * 2);
+    }
+
+    private int getPositionPoint(String position) {
+        if (null == position || position.isEmpty()) {
+            return positionV.get(OTHER);
+        }
+        for (String key : positionV.keySet()) {
+            if (position.contains(key) || key.contains(position)) {
+                return positionV.get(key);
+            }
+        }
+        return positionV.get(OTHER);
+    }
+
+    private int getAgePoint(String age) {
+        if (null == age || age.isEmpty()) {
+            return 0;
+        }
+        int ageI = Integer.parseInt(age.substring(0, 4));
+        if (ageI >  2015) {
+            return 50;
+        }
+        return  (ageI - 1998) * 6;
+    }
+
+    private int getFloorPoint(String floor) {
+        if (null == floor || floor.isEmpty()) {
+            return floorV.get(OTHER);
+        }
+        if (floor.contains(FLOOR_LOW)) {
+            return floorV.get(FLOOR_LOW);
+        } else if (floor.contains(FLOOR_MIDDLE)) {
+            return floorV.get(FLOOR_MIDDLE);
+        } else if (floor.contains(FLOOR_HIGH)) {
+            return floorV.get(FLOOR_HIGH);
+        }
+        return floorV.get(OTHER);
+    }
+
+    private int getShapePoint(String shape) {
+        if (null == shape || shape.isEmpty()) {
+            return 50;
+        }
+        String n, t;
+        int roomN = 0, livingN = 0, kitchenN = 0, toiletN = 0;
+        for (int i = 1; i < shape.length(); i++) {
+            n = shape.substring(i - 1, i);
+            t = shape.substring(i, i + 1);
+            if ("室".equals(t)) {
+                roomN = Integer.parseInt(n);
+            } else if ("厅".equals(t)) {
+                livingN = Integer.parseInt(n);
+            } else if ("厨".equals(t)) {
+                kitchenN = Integer.parseInt(n);
+            } else if ("卫".equals(t)) {
+                toiletN = Integer.parseInt(n);
+            }
+        }
+        return roomN * 18 + livingN * 9 + kitchenN * 15 + toiletN * 15;
+    }
+
+    private int getLastSalePoint(String lastSale) {
+        if (null == lastSale || lastSale.isEmpty()) {
+            return 0;
+        }
+        String n;
+        int start = 0, year = 0, month = 0, day = 0;
+        for (int i = 1; i < lastSale.length(); i++) {
+            if ("年".equals(lastSale.substring(i, i + 1))) {
+                n = lastSale.substring(start, i);
+                year = Integer.parseInt(n);
+                start = i + 1;
+            } else if ("月".equals(lastSale.substring(i, i + 1))) {
+                n = lastSale.substring(start, i);
+                month = Integer.parseInt(n);
+                start = i + 1;
+            } else if ("日".equals(lastSale.substring(i, i + 1))) {
+                n = lastSale.substring(start, i);
+                day = Integer.parseInt(n);
+                start = i + 1;
+            }
+        }
+        if (year > 2015 || year < 2000) {
+            return 0;
+        }
+        float lastSaleF = (float) (year + month / 12.0 + day / 365.0);
+        Date nowD = new Date();
+        int y = nowD.getYear() + 1900, m = nowD.getMonth() + 1, d = nowD.getDate();
+        float nowF = (float) (y + m / 12.0 + d / 365.0);
+        return (int) ((nowF - lastSaleF) * 12);
+    }
+
+    public static void main(String[] args) {
+        House house = new House("17,539元/平", "160万",
+                "91.23m²", "高楼层/7", "1999年",
+                "2室2厅1厨1卫", "19,410元/平", "1999年06月25日",
+                "洪山区，武昌火车站", "2017.07.11", "南 北", "精装");
+        System.err.println(house.calculate());
+    }
+
+    public House(String price, String total, String size, String floor, String age, String shape, String priceAvg, String lastSale, String position, String putOut, String direction, String decorate) {
+        this.price = price;
+        if (null != price) {
+            int idx2 = price.indexOf("元/平"), idx1 = price.indexOf(",");
+            String num = price.substring(0, idx1) + price.substring(idx1 + 1, idx2);
+            priceF = Float.parseFloat(num);
+        }
+        this.size = size;
+        if (null != size) {
+            int idx = size.indexOf("m");
+            sizeF = Float.parseFloat(size.substring(0, idx));
+        }
+        this.total = total;
+        if (null != price && null != size) {
+            totalF = (float) (sizeF * priceF / 10000.0);
+        } else if (null != total) {
+            int idx = total.indexOf("万");
+            totalF = Float.parseFloat(total.substring(0, idx));
+        }
+        this.floor = floor;
+        this.age = age;
+        this.shape = shape;
+        this.priceAvg = priceAvg;
+        if (null != priceAvg) {
+            int idx2 = priceAvg.indexOf("元/平"), idx1 = priceAvg.indexOf(",");
+            String num = priceAvg.substring(0, idx1) + priceAvg.substring(idx1 + 1, idx2);
+            priceAvgF = Float.parseFloat(num);
+        }
+        this.lastSale = lastSale;
+        this.position = position;
+        this.putOut = putOut;
+        this.direction = direction;
+        this.decorate = decorate;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
+    public float getPriceF() {
+        return priceF;
+    }
+
+    public void setPriceF(float priceF) {
+        this.priceF = priceF;
+    }
+
+    public String getTotal() {
+        return total;
+    }
+
+    public void setTotal(String total) {
+        this.total = total;
+    }
+
+    public float getTotalF() {
+        return totalF;
+    }
+
+    public void setTotalF(float totalF) {
+        this.totalF = totalF;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
+    }
+
+    public float getSizeF() {
+        return sizeF;
+    }
+
+    public void setSizeF(float sizeF) {
+        this.sizeF = sizeF;
+    }
+
+    public String getFloor() {
+        return floor;
+    }
+
+    public void setFloor(String floor) {
+        this.floor = floor;
+    }
+
+    public String getAge() {
+        return age;
+    }
+
+    public void setAge(String age) {
+        this.age = age;
+    }
+
+    public String getShape() {
+        return shape;
+    }
+
+    public void setShape(String shape) {
+        this.shape = shape;
+    }
+
+    public String getPriceAvg() {
+        return priceAvg;
+    }
+
+    public void setPriceAvg(String priceAvg) {
+        this.priceAvg = priceAvg;
+    }
+
+    public float getPriceAvgF() {
+        return priceAvgF;
+    }
+
+    public void setPriceAvgF(float priceAvgF) {
+        this.priceAvgF = priceAvgF;
+    }
+
+    public String getLastSale() {
+        return lastSale;
+    }
+
+    public void setLastSale(String lastSale) {
+        this.lastSale = lastSale;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public String getPutOut() {
+        return putOut;
+    }
+
+    public void setPutOut(String putOut) {
+        this.putOut = putOut;
+    }
+
+    public String getDirection() {
+        return direction;
+    }
+
+    public void setDirection(String direction) {
+        this.direction = direction;
+    }
+
+    public String getDecorate() {
+        return decorate;
+    }
+
+    public void setDecorate(String decorate) {
+        this.decorate = decorate;
+    }
+}
