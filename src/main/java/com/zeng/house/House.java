@@ -197,7 +197,7 @@ public class House {
         int year = Integer.parseInt(putOut.substring(0, 4))
                 , month = Integer.parseInt(putOut.substring(5, 7))
                 , day = Integer.parseInt(putOut.substring(8, 10));
-        float putOutF = (float) (year + month / 12.0 + day / 365.0);
+        putOutF = (float) (year + month / 12.0 + day / 365.0);
         Date nowD = new Date();
         int y = nowD.getYear() + 1900, m = nowD.getMonth() + 1, d = nowD.getDate();
         float nowF = (float) (y + m / 12.0 + d / 365.0);
@@ -223,11 +223,11 @@ public class House {
         if (null == age || age.isEmpty()) {
             return 0;
         }
-        int ageI = Integer.parseInt(age.substring(0, 4));
-        if (ageI >  2015) {
+        this.ageF = Float.parseFloat(age.substring(0, 4));
+        if (this.ageF >  2015) {
             return 50;
         }
-        return  (ageI - 1998) * 6;
+        return (int) ((this.ageF - 1998) * 6);
     }
 
     private int getFloorPoint(String floor) {
@@ -288,13 +288,13 @@ public class House {
                 start = i + 1;
             }
         }
-        if (year > 2015 || year < 2000) {
-            return 0;
-        }
-        float lastSaleF = (float) (year + month / 12.0 + day / 365.0);
+        lastSaleF = (float) (year + month / 12.0 + day / 365.0);
         Date nowD = new Date();
         int y = nowD.getYear() + 1900, m = nowD.getMonth() + 1, d = nowD.getDate();
         float nowF = (float) (y + m / 12.0 + d / 365.0);
+        if (nowF - lastSaleF < 2 || lastSaleF < 2000) {
+            return 0;
+        }
         return (int) ((nowF - lastSaleF) * 12);
     }
 
@@ -303,7 +303,7 @@ public class House {
                 "91.23m²", "高楼层/7", "1999年",
                 "2室2厅1厨1卫", "19,410元/平", "1999年06月25日",
                 "洪山区，武昌火车站", "2017.07.11", "南 北", "精装");
-        System.err.println(house.calculate());
+        System.err.println(house.toString());
     }
 
     public House(String price, String total, String size, String floor, String age, String shape, String priceAvg, String lastSale, String position, String putOut, String direction, String decorate) {
@@ -339,6 +339,7 @@ public class House {
         this.putOut = putOut;
         this.direction = direction;
         this.decorate = decorate;
+        this.evaluatePoint = calculate();
     }
 
     public String getPrice() {
@@ -467,5 +468,31 @@ public class House {
 
     public void setDecorate(String decorate) {
         this.decorate = decorate;
+    }
+
+    @Override
+    public String toString() {
+        return "House{" +
+                "price='" + price + '\'' +
+                ", priceF=" + priceF +
+                ", total='" + total + '\'' +
+                ", totalF=" + totalF +
+                ", size='" + size + '\'' +
+                ", sizeF=" + sizeF +
+                ", floor='" + floor + '\'' +
+                ", age='" + age + '\'' +
+                ", ageF=" + ageF +
+                ", shape='" + shape + '\'' +
+                ", priceAvg='" + priceAvg + '\'' +
+                ", priceAvgF=" + priceAvgF +
+                ", lastSale='" + lastSale + '\'' +
+                ", lastSaleF=" + lastSaleF +
+                ", position='" + position + '\'' +
+                ", putOut='" + putOut + '\'' +
+                ", putOutF=" + putOutF +
+                ", direction='" + direction + '\'' +
+                ", decorate='" + decorate + '\'' +
+                ", evaluatePoint=" + evaluatePoint +
+                '}';
     }
 }
