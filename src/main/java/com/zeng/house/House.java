@@ -44,11 +44,11 @@ public class House {
     /**
      * 朝向枚举：南北，东西
      */
-    private static final String DIRECTION_NB = "南北", DIRECTION_DX = "东西";
+    private static final String DIRECTION_NB = "南", DIRECTION_EMPTY = "空";
     /**
      * 装修枚举：毛坯，简装，精装
      */
-    private static final String DECORATE_NO = "毛坯", DECORATE_SAMPLE = "简装", DECORATE_GOOD = "精装";
+    private static final String DECORATE_NO = "毛", DECORATE_SAMPLE = "简", DECORATE_GOOD = "精";
     /**
      * 枚举缺省值
      */
@@ -77,8 +77,8 @@ public class House {
         positionV.put(OTHER, 0);
         directionV = new TreeMap<>();
         directionV.put(DIRECTION_NB, 100);
-        directionV.put(DIRECTION_DX, 0);
-        directionV.put(OTHER, 50);
+        directionV.put(OTHER, 0);
+        directionV.put(DIRECTION_EMPTY, 50);
         decorateV = new TreeMap<>();
         decorateV.put(DECORATE_NO, 0);
         decorateV.put(DECORATE_SAMPLE, 70);
@@ -87,21 +87,26 @@ public class House {
     }
 
     private String price;
-    private float priceF;
+    private float priceF;   //向下过滤
     private String total;
-    private float totalF;
+    private float totalF;   //向下过滤
     private String size;
-    private float sizeF;
-    private String floor;
+    private float sizeF;    //向上过滤
+    private String floor;   //不过滤
     private String age;
-    private String shape;
+    private float ageF;     //向上过滤
+    private String shape;   //转化为x室x厅x厨x卫，向上过滤
     private String priceAvg;
     private float priceAvgF;
     private String lastSale;
-    private String position;
+    private float lastSaleF;    //向下过滤
+    private String position;    //转化为上面的枚举，相同过滤
     private String putOut;
-    private String direction;
-    private String decorate;
+    private float putOutF;      //向上过滤
+    private String direction;   //转化为南，其他，相同过滤
+    private String decorate;    //转化为毛，简，精，相同过滤
+
+    private int evaluatePoint;  //向上过滤
 
     public int calculate() {
         int priceP = getPricePoint(price);
@@ -133,11 +138,14 @@ public class House {
 
     private int getDecoratePoint(String decorate) {
         if (null != decorate && !decorate.isEmpty()) {
-            if (decorate.contains("毛")) {
+            if (decorate.contains(DECORATE_NO)) {
+                this.decorate = DECORATE_NO;
                 return decorateV.get(DECORATE_NO);
-            } else if (decorate.contains("简")) {
+            } else if (decorate.contains(DECORATE_SAMPLE)) {
+                this.decorate = DECORATE_SAMPLE;
                 return decorateV.get(DECORATE_SAMPLE);
-            } else if (decorate.contains("精")) {
+            } else if (decorate.contains(DECORATE_GOOD)) {
+                this.decorate = DECORATE_GOOD;
                 return decorateV.get(DECORATE_GOOD);
             }
         }
@@ -166,17 +174,20 @@ public class House {
     }
 
     private int getDirectionPoint(String direction) {
-        if (null == direction || direction.isEmpty()) {
-            return directionV.get(OTHER);
+        if (null != direction && !direction.isEmpty()) {
+            if (direction.contains(DIRECTION_NB)) {
+                this.direction = DIRECTION_NB;
+                return directionV.get(DIRECTION_NB);
+            } else if (direction.contains("东") || direction.contains("西")) {
+                this.direction = OTHER;
+                return directionV.get(OTHER);
+            } else if (direction.contains("北")) {
+                this.direction = OTHER;
+                return directionV.get(OTHER);
+            }
         }
-        if (direction.contains("南")) {
-            return directionV.get(DIRECTION_NB);
-        } else if (direction.contains("东") || direction.contains("西")) {
-            return directionV.get(DIRECTION_DX);
-        } else if (direction.contains("北")) {
-            return directionV.get(DIRECTION_DX);
-        }
-        return directionV.get(OTHER);
+        this.direction = DIRECTION_EMPTY;
+        return directionV.get(DIRECTION_EMPTY);
     }
 
     private int getPutOutPoint(String putOut) {
@@ -195,13 +206,16 @@ public class House {
 
     private int getPositionPoint(String position) {
         if (null == position || position.isEmpty()) {
+            this.position = OTHER;
             return positionV.get(OTHER);
         }
         for (String key : positionV.keySet()) {
             if (position.contains(key) || key.contains(position)) {
+                this.position = key;
                 return positionV.get(key);
             }
         }
+        this.position = OTHER;
         return positionV.get(OTHER);
     }
 
@@ -249,6 +263,7 @@ public class House {
                 toiletN = Integer.parseInt(n);
             }
         }
+        this.shape = roomN + "室" + livingN + "厅" + kitchenN + "厨" + toiletN + "卫";
         return roomN * 18 + livingN * 9 + kitchenN * 15 + toiletN * 15;
     }
 

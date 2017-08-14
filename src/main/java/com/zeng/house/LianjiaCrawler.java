@@ -44,7 +44,7 @@ public class LianjiaCrawler extends WebCrawler {
         String key, value;
         for (Element element : shortC) {
             childNodes = element.childNodes();
-            key = ((TextNode) (((Element) childNodes.get(0)).childNode(0))).text();
+            key = ((TextNode) (childNodes.get(0).childNode(0))).text();
             value = ((TextNode) childNodes.get(1)).text();
         }
         for (Element element : info_li) {
