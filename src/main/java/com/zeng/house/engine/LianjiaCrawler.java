@@ -33,29 +33,31 @@ public class LianjiaCrawler extends WebCrawler {
 
     @Override
     public void visit(Page page) {
-        System.err.println("visit: " + page.getWebURL().getURL());
-        Document document = Jsoup.parse(((HtmlParseData) page.getParseData()).getHtml());
-        String title = document.title();
-        Elements shortC = document.getElementsByClass("short");
-        Elements info_li = document.getElementsByClass("info_li");
-        Elements house_model_tit = document.getElementsByClass("house_model_tit");
-        Elements red_big = document.getElementsByClass("red big");
-        List<Node> childNodes;
-        String key, value;
-        for (Element element : shortC) {
-            childNodes = element.childNodes();
-            key = ((TextNode) (childNodes.get(0).childNode(0))).text();
-            value = ((TextNode) childNodes.get(1)).text();
-        }
-        for (Element element : info_li) {
+        try {
+            System.err.println("visit: " + page.getWebURL().getURL());
+            Document document = Jsoup.parse(((HtmlParseData) page.getParseData()).getHtml());
+            String title = document.title();
+            Elements shortC = document.getElementsByClass("short");
+            Elements info_li = document.getElementsByClass("info_li");
+            Elements house_model_tit = document.getElementsByClass("house_model_tit");
+            Elements red_big = document.getElementsByClass("red big");
+            List<Node> childNodes;
+            String key, value;
+            for (Element element : shortC) {
+                childNodes = element.childNodes();
+                key = ((TextNode) (childNodes.get(0).childNode(0))).text();
+                value = ((TextNode) childNodes.get(1)).text();
+            }
+            for (Element element : info_li) {
 //            children = element.getAllElements();
-        }
-        for (Element element : house_model_tit) {
+            }
+            for (Element element : house_model_tit) {
 //            children = element.getAllElements();
-        }
-        for (Element element : red_big) {
+            }
+            for (Element element : red_big) {
 //            children = element.getAllElements();
-        }
-        System.err.println(document.body());
+            }
+            System.err.println(document.body());
+        } catch (Exception e) {}
     }
 }

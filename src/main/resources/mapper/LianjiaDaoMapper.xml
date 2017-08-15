@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zeng.house.dao.LianjiaDao" >
+
+    <select id="select"
+            parameterType="com.zeng.house.bean.LianjiaHouse">
+        SELECT
+            *
+        FROM house_lj
+        <where>
+            <if test="priceF != null">
+                AND #{priceF} >= priceF
+            </if>
+            <if test="totalF != null" >
+                AND #{totalF} >= totalF
+            </if>
+            <if test="sizeF != null">
+                AND sizeF >= #{sizeF}
+            </if>
+            <if test="buildTimeF != null">
+                AND buildTimeF >= #{buildTimeF}
+            </if>
+            <if test="lastSaleF != null">
+                AND #{lastSaleF} >= lastSaleF
+            </if>
+            <if test="putOutF != null">
+                AND putOutF >= #{putOutF}
+            </if>
+            <if test="shape != null">
+                AND shape >= #{shape}
+            </if>
+            <if test="position != null">
+                AND position = #{position}
+            </if>
+            <if test="direction != null">
+                and direction = #{direction}
+            </if>
+            <if test="decorate != null">
+                AND decorate = #{decorate}
+            </if>
+            ORDER BY evaluatePoint DESC
+            limit #{limit}
+        </where>
+    </select>
+
+</mapper>

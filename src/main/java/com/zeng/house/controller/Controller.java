@@ -22,6 +22,8 @@ import java.util.List;
  */
 @RestController
 public class Controller {
+    private Thread ljThread;
+
     @Autowired
     private LianjiaDao lianjiaDao;
 
@@ -32,6 +34,7 @@ public class Controller {
         CrawlConfig config = new CrawlConfig();
         config.setCrawlStorageFolder(storagePath);
         config.setIncludeHttpsPages(true);
+        config.setResumableCrawling(true);
         config.setUserAgentString("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36");
 
         PageFetcher pageFetcher = new PageFetcher(config);
@@ -39,7 +42,7 @@ public class Controller {
         robotstxtConfig.setEnabled(false);
         RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher);
 
-        Thread ljThread = new Thread(new Runnable() {
+        ljThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -59,6 +62,11 @@ public class Controller {
     public String lj(@ModelAttribute LianjiaHouse house, @RequestParam Integer limit) {
         List<LianjiaHouse> houseList = lianjiaDao.select(house, limit);
         return "lj";
+    }
+
+    @RequestMapping("ljState")
+    public String ljState() {
+        return ljThread.getState().toString();
     }
 
     @RequestMapping("ljCount")

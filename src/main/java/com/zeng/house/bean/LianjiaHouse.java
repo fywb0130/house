@@ -93,8 +93,8 @@ public class LianjiaHouse {
     private String size;
     private Float sizeF;    //向上过滤
     private String floor;   //不过滤
-    private String age;
-    private Float ageF;     //向上过滤
+    private String buildTime;
+    private Float buildTimeF;     //向上过滤
     private String shape;   //转化为x室x厅x厨x卫，向上过滤
     private String priceAvg;
     private Float priceAvgF;
@@ -113,7 +113,7 @@ public class LianjiaHouse {
         int priceP = getPricePoint(price);
         int totalP = getTotalPoint(total);
         int sizeP = getSizePoint(size);
-        int ageP = getAgePoint(age);
+        int ageP = getAgePoint(buildTime);
         int shapeP = getShapePoint(shape);
         int floorP = getFloorPoint(floor);
         int priceDiffP = null == priceAvg ? 0 : (int) ((priceAvgF - priceF) / 13.0);
@@ -221,11 +221,11 @@ public class LianjiaHouse {
         if (null == age || age.isEmpty()) {
             return 0;
         }
-        this.ageF = Float.parseFloat(age.substring(0, 4));
-        if (this.ageF >  2015) {
+        this.buildTimeF = Float.parseFloat(age.substring(0, 4));
+        if (this.buildTimeF >  2015) {
             return 50;
         }
-        return (int) ((this.ageF - 1998) * 6);
+        return (int) ((this.buildTimeF - 1998) * 6);
     }
 
     private int getFloorPoint(String floor) {
@@ -307,7 +307,7 @@ public class LianjiaHouse {
     public LianjiaHouse() {
     }
 
-    public LianjiaHouse(String price, String total, String size, String floor, String age, String shape, String priceAvg, String lastSale, String position, String putOut, String direction, String decorate) {
+    public LianjiaHouse(String price, String total, String size, String floor, String buildTime, String shape, String priceAvg, String lastSale, String position, String putOut, String direction, String decorate) {
         this.price = price;
         if (null != price) {
             int idx2 = price.indexOf("元/平"), idx1 = price.indexOf(",");
@@ -327,7 +327,7 @@ public class LianjiaHouse {
             totalF = (float) (sizeF * priceF / 10000.0);
         }
         this.floor = floor;
-        this.age = age;
+        this.buildTime = buildTime;
         this.shape = shape;
         this.priceAvg = priceAvg;
         if (null != priceAvg) {
@@ -399,20 +399,20 @@ public class LianjiaHouse {
         this.floor = floor;
     }
 
-    public String getAge() {
-        return age;
+    public String getBuildTime() {
+        return buildTime;
     }
 
-    public void setAge(String age) {
-        this.age = age;
+    public void setBuildTime(String buildTime) {
+        this.buildTime = buildTime;
     }
 
-    public Float getAgeF() {
-        return ageF;
+    public Float getBuildTimeF() {
+        return buildTimeF;
     }
 
-    public void setAgeF(Float ageF) {
-        this.ageF = ageF;
+    public void setBuildTimeF(Float buildTimeF) {
+        this.buildTimeF = buildTimeF;
     }
 
     public String getShape() {
@@ -521,8 +521,8 @@ public class LianjiaHouse {
                 ", size='" + size + '\'' +
                 ", sizeF=" + sizeF +
                 ", floor='" + floor + '\'' +
-                ", age='" + age + '\'' +
-                ", ageF=" + ageF +
+                ", buildTime='" + buildTime + '\'' +
+                ", buildTimeF=" + buildTimeF +
                 ", shape='" + shape + '\'' +
                 ", priceAvg='" + priceAvg + '\'' +
                 ", priceAvgF=" + priceAvgF +

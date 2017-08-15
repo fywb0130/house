@@ -2,6 +2,7 @@ package com.zeng.house.dao;
 
 import com.zeng.house.bean.LianjiaHouse;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ import java.util.List;
 public interface LianjiaDao {
     List<LianjiaHouse> select(LianjiaHouse house, Integer limit);
 
+@Select("select count(*) from lianjia")
     Long count();
 
     void insert(LianjiaHouse house);
