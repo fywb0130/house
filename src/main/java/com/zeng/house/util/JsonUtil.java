@@ -1,4 +1,4 @@
-package com.zeng.house;
+package com.zeng.house.util;
 
 import com.google.gson.Gson;
 

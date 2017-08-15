@@ -1,4 +1,4 @@
-package com.zeng.house;
+package com.zeng.house.bean;
 
 import java.util.Date;
 import java.util.Map;
@@ -87,22 +87,22 @@ public class LianjiaHouse {
     }
 
     private String price;
-    private float priceF;   //向下过滤
+    private Float priceF;   //向下过滤
     private String total;
-    private float totalF;   //向下过滤
+    private Float totalF;   //向下过滤
     private String size;
-    private float sizeF;    //向上过滤
+    private Float sizeF;    //向上过滤
     private String floor;   //不过滤
     private String age;
-    private float ageF;     //向上过滤
+    private Float ageF;     //向上过滤
     private String shape;   //转化为x室x厅x厨x卫，向上过滤
     private String priceAvg;
-    private float priceAvgF;
+    private Float priceAvgF;
     private String lastSale;
-    private float lastSaleF;    //向下过滤
+    private Float lastSaleF;    //向下过滤
     private String position;    //转化为上面的枚举，相同过滤
     private String putOut;
-    private float putOutF;      //向上过滤
+    private Float putOutF;      //向上过滤
     private String direction;   //转化为南，其他，相同过滤
     private String decorate;    //转化为毛，简，精，相同过滤
 
@@ -347,11 +347,11 @@ public class LianjiaHouse {
         this.price = price;
     }
 
-    public float getPriceF() {
+    public Float getPriceF() {
         return priceF;
     }
 
-    public void setPriceF(float priceF) {
+    public void setPriceF(Float priceF) {
         this.priceF = priceF;
     }
 
@@ -363,11 +363,11 @@ public class LianjiaHouse {
         this.total = total;
     }
 
-    public float getTotalF() {
+    public Float getTotalF() {
         return totalF;
     }
 
-    public void setTotalF(float totalF) {
+    public void setTotalF(Float totalF) {
         this.totalF = totalF;
     }
 
@@ -379,11 +379,11 @@ public class LianjiaHouse {
         this.size = size;
     }
 
-    public float getSizeF() {
+    public Float getSizeF() {
         return sizeF;
     }
 
-    public void setSizeF(float sizeF) {
+    public void setSizeF(Float sizeF) {
         this.sizeF = sizeF;
     }
 
@@ -403,6 +403,14 @@ public class LianjiaHouse {
         this.age = age;
     }
 
+    public Float getAgeF() {
+        return ageF;
+    }
+
+    public void setAgeF(Float ageF) {
+        this.ageF = ageF;
+    }
+
     public String getShape() {
         return shape;
     }
@@ -419,11 +427,11 @@ public class LianjiaHouse {
         this.priceAvg = priceAvg;
     }
 
-    public float getPriceAvgF() {
+    public Float getPriceAvgF() {
         return priceAvgF;
     }
 
-    public void setPriceAvgF(float priceAvgF) {
+    public void setPriceAvgF(Float priceAvgF) {
         this.priceAvgF = priceAvgF;
     }
 
@@ -433,6 +441,14 @@ public class LianjiaHouse {
 
     public void setLastSale(String lastSale) {
         this.lastSale = lastSale;
+    }
+
+    public Float getLastSaleF() {
+        return lastSaleF;
+    }
+
+    public void setLastSaleF(Float lastSaleF) {
+        this.lastSaleF = lastSaleF;
     }
 
     public String getPosition() {
@@ -451,6 +467,14 @@ public class LianjiaHouse {
         this.putOut = putOut;
     }
 
+    public Float getPutOutF() {
+        return putOutF;
+    }
+
+    public void setPutOutF(Float putOutF) {
+        this.putOutF = putOutF;
+    }
+
     public String getDirection() {
         return direction;
     }
@@ -465,6 +489,14 @@ public class LianjiaHouse {
 
     public void setDecorate(String decorate) {
         this.decorate = decorate;
+    }
+
+    public int getEvaluatePoint() {
+        return evaluatePoint;
+    }
+
+    public void setEvaluatePoint(int evaluatePoint) {
+        this.evaluatePoint = evaluatePoint;
     }
 
     @Override

@@ -1,22 +1,28 @@
-package com.zeng.house;
+package com.zeng.house.controller;
 
-import com.google.gson.Gson;
+import com.zeng.house.bean.LianjiaHouse;
+import com.zeng.house.dao.LianjiaDao;
+import com.zeng.house.engine.LianjiaCrawler;
+import com.zeng.house.util.JsonUtil;
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.CrawlController;
 import edu.uci.ics.crawler4j.fetcher.PageFetcher;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtConfig;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * Created by zengqiang on 2017/8/11.
  */
 @RestController
 public class Controller {
-//    @Autowired
-//    private LianjiaCrawler lianjiaCrawler;
+    @Autowired
+    private LianjiaDao lianjiaDao;
 
     public Controller() throws Exception {
         String storagePath = "./resultData";
@@ -49,8 +55,14 @@ public class Controller {
     }
 
     @RequestMapping("lj")
-    public String result() {
+    public String result(@ModelAttribute LianjiaHouse house) {
+        List<LianjiaHouse> houseList = lianjiaDao.select(house);
         return "lj";
+    }
+
+    @RequestMapping("ljCount")
+    public String ljCount() {
+        return lianjiaDao.count().toString();
     }
 
     @RequestMapping("ljPosition")
