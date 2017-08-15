@@ -45,7 +45,11 @@
 
     <insert id="insert" parameterType="com.zeng.house.bean.LianjiaHouse">
         insert into house_lj(price, priceF, total, totalF, size, sizeF, floor, buildTime,
-        buildTimeF,)
+        buildTimeF, shape, priceAvg, priceAvgF, lastSale, lastSaleF, position, putOut,
+        putOutF, direction, decorate, evaluatePoint)
+        values(#{price}, #{priceF}, #{total}, #{totalF}, #{size}, #{sizeF}, #{floor}, #{buildTime},
+        #{buildTimeF}, #{shape}, #{priceAvg}, #{priceAvgF}, #{lastSale}, #{lastSaleF}, #{position}, #{putOut},
+        #{putOutF}, #{direction}, #{decorate}, #{evaluatePoint})
     </insert>
 
 </mapper>

@@ -55,7 +55,10 @@ public class Controller {
             }
         });
 
-        ljThread.start();
+        /**
+         * TODO:暂停
+         */
+//        ljThread.start();
     }
 
     @RequestMapping("lj")
@@ -77,5 +80,13 @@ public class Controller {
     @RequestMapping("ljPosition")
     public String ljPosition() {
         return JsonUtil.toJson(LianjiaHouse.positionV.keySet());
+    }
+
+    @RequestMapping("ti")
+    public String ti() {
+        LianjiaHouse house = new LianjiaHouse();
+        house.setPrice("1234");
+        lianjiaDao.insert(house);
+        return "ti";
     }
 }
