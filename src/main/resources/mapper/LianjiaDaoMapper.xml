@@ -3,7 +3,7 @@
 <mapper namespace="com.zeng.house.dao.LianjiaDao" >
 
     <select id="select"
-            parameterType="com.zeng.house.bean.LianjiaHouse">
+            resultType="com.zeng.house.bean.LianjiaHouse">
         SELECT
             *
         FROM house_lj
@@ -42,5 +42,10 @@
             limit #{limit}
         </where>
     </select>
+
+    <insert id="insert" parameterType="com.zeng.house.bean.LianjiaHouse">
+        insert into house_lj(price, priceF, total, totalF, size, sizeF, floor, buildTime,
+        buildTimeF,)
+    </insert>
 
 </mapper>
