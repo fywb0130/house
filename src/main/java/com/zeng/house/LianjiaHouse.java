@@ -4,30 +4,30 @@ import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class House {
+public class LianjiaHouse {
     /**
      * 权重
      */
-    private static int priceW = 8;      //单价
-    private static int totalW = 9;      //总价
-    private static int sizeW = 8;       //面积
-    private static int floorW = 7;      //楼层
-    private static int ageW = 8;        //房屋年代
-    private static int shapeW = 8;      //户型
-    private static int priceDiffW = 10; //与参加单价差值
-    private static int lastSaleW = 9;   //上次交易时间
-    private static int positionW = 9;   //位置
-    private static int putOutW = 8;     //挂牌时间
-    private static int directionW = 5;  //朝向
-    private static int decorateW = 12;  //装修
+    public static int priceW = 8;      //单价
+    public static int totalW = 9;      //总价
+    public static int sizeW = 8;       //面积
+    public static int floorW = 7;      //楼层
+    public static int ageW = 8;        //房屋年代
+    public static int shapeW = 8;      //户型
+    public static int priceDiffW = 10; //与参加单价差值
+    public static int lastSaleW = 9;   //上次交易时间
+    public static int positionW = 9;   //位置
+    public static int putOutW = 8;     //挂牌时间
+    public static int directionW = 5;  //朝向
+    public static int decorateW = 11;  //装修
 
     /**
      * 分值规则
      */
-    private static Map<String, Integer> floorV;
-    private static Map<String, Integer> positionV;
-    private static Map<String, Integer> directionV;
-    private static Map<String, Integer> decorateV;
+    public static Map<String, Integer> floorV;
+    public static Map<String, Integer> positionV;
+    public static Map<String, Integer> directionV;
+    public static Map<String, Integer> decorateV;
 
     /**
      * 楼层枚举：低楼层，中楼层，高楼层
@@ -186,7 +186,6 @@ public class House {
                 return directionV.get(OTHER);
             }
         }
-        this.direction = DIRECTION_EMPTY;
         return directionV.get(DIRECTION_EMPTY);
     }
 
@@ -206,7 +205,6 @@ public class House {
 
     private int getPositionPoint(String position) {
         if (null == position || position.isEmpty()) {
-            this.position = OTHER;
             return positionV.get(OTHER);
         }
         for (String key : positionV.keySet()) {
@@ -215,7 +213,6 @@ public class House {
                 return positionV.get(key);
             }
         }
-        this.position = OTHER;
         return positionV.get(OTHER);
     }
 
@@ -299,14 +296,14 @@ public class House {
     }
 
     public static void main(String[] args) {
-        House house = new House("17,539元/平", "160万",
+        LianjiaHouse lianjiaHouse = new LianjiaHouse("17,539元/平", "160万",
                 "91.23m²", "高楼层/7", "1999年",
                 "2室2厅1厨1卫", "19,410元/平", "1999年06月25日",
                 "洪山区，武昌火车站", "2017.07.11", "南 北", "精装");
-        System.err.println(house.toString());
+        System.err.println(lianjiaHouse.toString());
     }
 
-    public House(String price, String total, String size, String floor, String age, String shape, String priceAvg, String lastSale, String position, String putOut, String direction, String decorate) {
+    public LianjiaHouse(String price, String total, String size, String floor, String age, String shape, String priceAvg, String lastSale, String position, String putOut, String direction, String decorate) {
         this.price = price;
         if (null != price) {
             int idx2 = price.indexOf("元/平"), idx1 = price.indexOf(",");
@@ -319,11 +316,11 @@ public class House {
             sizeF = Float.parseFloat(size.substring(0, idx));
         }
         this.total = total;
-        if (null != price && null != size) {
-            totalF = (float) (sizeF * priceF / 10000.0);
-        } else if (null != total) {
+        if (null != total && !total.isEmpty()) {
             int idx = total.indexOf("万");
             totalF = Float.parseFloat(total.substring(0, idx));
+        } else if (null != price && null != size) {
+            totalF = (float) (sizeF * priceF / 10000.0);
         }
         this.floor = floor;
         this.age = age;
@@ -472,7 +469,7 @@ public class House {
 
     @Override
     public String toString() {
-        return "House{" +
+        return "LianjiaHouse{" +
                 "price='" + price + '\'' +
                 ", priceF=" + priceF +
                 ", total='" + total + '\'' +

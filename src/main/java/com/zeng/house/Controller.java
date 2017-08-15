@@ -1,5 +1,6 @@
 package com.zeng.house;
 
+import com.google.gson.Gson;
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.CrawlController;
 import edu.uci.ics.crawler4j.fetcher.PageFetcher;
@@ -50,5 +51,10 @@ public class Controller {
     @RequestMapping("lj")
     public String result() {
         return "lj";
+    }
+
+    @RequestMapping("ljPosition")
+    public String ljPosition() {
+        return JsonUtil.toJson(LianjiaHouse.positionV.keySet());
     }
 }
