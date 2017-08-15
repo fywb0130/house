@@ -1,5 +1,6 @@
 package com.zeng.house.engine;
 
+import com.zeng.house.bean.LianjiaHouse;
 import edu.uci.ics.crawler4j.crawler.Page;
 import edu.uci.ics.crawler4j.crawler.WebCrawler;
 import edu.uci.ics.crawler4j.parser.HtmlParseData;
@@ -37,6 +38,7 @@ public class LianjiaCrawler extends WebCrawler {
             System.err.println("visit: " + page.getWebURL().getURL());
             Document document = Jsoup.parse(((HtmlParseData) page.getParseData()).getHtml());
             String title = document.title();
+            String price, total, size, floor, buildTime, shape, priceAvg, lastSale, position, putOut, direction, decorate;
             Elements shortC = document.getElementsByClass("short");
             Elements info_li = document.getElementsByClass("info_li");
             Elements house_model_tit = document.getElementsByClass("house_model_tit");
@@ -47,6 +49,17 @@ public class LianjiaCrawler extends WebCrawler {
                 childNodes = element.childNodes();
                 key = ((TextNode) (childNodes.get(0).childNode(0))).text();
                 value = ((TextNode) childNodes.get(1)).text();
+                if (key.contains("挂牌")) {
+                    putOut = value;
+                } else if (key.contains("单价")) {
+                    price = value;
+                } else if (key.contains("朝向")) {
+                    direction = value;
+                } else if (key.contains("装修")) {
+                    decorate = value;
+                } else if (key.contains("年代")) {
+                    buildTime = value;
+                }
             }
             for (Element element : info_li) {
 //            children = element.getAllElements();

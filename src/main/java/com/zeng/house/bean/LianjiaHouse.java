@@ -105,6 +105,9 @@ public class LianjiaHouse {
     private Float putOutF;      //向上过滤
     private String direction;   //转化为南，其他，相同过滤
     private String decorate;    //转化为毛，简，精，相同过滤
+    /**
+     * TODO: 电梯，权属
+     */
 
     private int evaluatePoint;  //向上过滤
     private Date updateTime;
@@ -123,7 +126,7 @@ public class LianjiaHouse {
         int directionP = getDirectionPoint(direction);
         int decorateP = getDecoratePoint(decorate);
 
-        return priceP * priceW
+        evaluatePoint = priceP * priceW
                 + totalP * totalW
                 + sizeP * sizeW
                 + floorP * floorW
@@ -135,6 +138,8 @@ public class LianjiaHouse {
                 + putOutP * putOutW
                 + directionP * directionW
                 + decorateP * decorateW;
+
+        return evaluatePoint;
     }
 
     private int getDecoratePoint(String decorate) {
