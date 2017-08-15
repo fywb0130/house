@@ -55,7 +55,7 @@ public class Controller {
     }
 
     @RequestMapping("lj")
-    public String result(@ModelAttribute LianjiaHouse house) {
+    public String lj(@ModelAttribute LianjiaHouse house) {
         List<LianjiaHouse> houseList = lianjiaDao.select(house);
         return "lj";
     }
