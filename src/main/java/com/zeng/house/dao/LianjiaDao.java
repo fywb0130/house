@@ -10,7 +10,9 @@ import java.util.List;
  */
 @Mapper
 public interface LianjiaDao {
-    List<LianjiaHouse> select(LianjiaHouse house);
+    List<LianjiaHouse> select(LianjiaHouse house, Integer limit);
 
     Long count();
+
+    void insert(LianjiaHouse house);
 }

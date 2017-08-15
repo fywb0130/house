@@ -107,6 +107,7 @@ public class LianjiaHouse {
     private String decorate;    //转化为毛，简，精，相同过滤
 
     private int evaluatePoint;  //向上过滤
+    private Date updateTime;
 
     public int calculate() {
         int priceP = getPricePoint(price);
@@ -303,6 +304,9 @@ public class LianjiaHouse {
         System.err.println(lianjiaHouse.toString());
     }
 
+    public LianjiaHouse() {
+    }
+
     public LianjiaHouse(String price, String total, String size, String floor, String age, String shape, String priceAvg, String lastSale, String position, String putOut, String direction, String decorate) {
         this.price = price;
         if (null != price) {
@@ -497,6 +501,14 @@ public class LianjiaHouse {
 
     public void setEvaluatePoint(int evaluatePoint) {
         this.evaluatePoint = evaluatePoint;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 
     @Override

@@ -12,6 +12,7 @@ import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -55,8 +56,8 @@ public class Controller {
     }
 
     @RequestMapping("lj")
-    public String lj(@ModelAttribute LianjiaHouse house) {
-        List<LianjiaHouse> houseList = lianjiaDao.select(house);
+    public String lj(@ModelAttribute LianjiaHouse house, @RequestParam Integer limit) {
+        List<LianjiaHouse> houseList = lianjiaDao.select(house, limit);
         return "lj";
     }
 
