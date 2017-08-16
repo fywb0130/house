@@ -2,6 +2,7 @@ USE house;
 CREATE TABLE IF NOT EXISTS house_lj(
 id int unsigned PRIMARY KEY auto_increment,
 evaluatePoint int comment '评分',
+title VARCHAR(64) comment '标题',
 price VARCHAR(32) comment '单价描述',
 priceF FLOAT comment '单价',
 total VARCHAR(32) comment '总价描述',
@@ -21,5 +22,6 @@ putOut VARCHAR(32) comment '挂出时间描述',
 putOutF FLOAT comment '挂出时间',
 direction VARCHAR(32) comment '朝向',
 decorate VARCHAR(32) comment '装修',
+url VARCHAR(128) comment '链接地址'
 updateTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) engine=InnoDB DEFAULT charset=utf8mb4 comment='链家数据表';

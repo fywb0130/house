@@ -86,6 +86,7 @@ public class LianjiaHouse {
         decorateV.put(OTHER, 50);
     }
 
+    private String title;
     private String price;
     private Float priceF;   //向下过滤
     private String total;
@@ -105,10 +106,8 @@ public class LianjiaHouse {
     private Float putOutF;      //向上过滤
     private String direction;   //转化为南，其他，相同过滤
     private String decorate;    //转化为毛，简，精，相同过滤
-    /**
-     * TODO: 电梯，权属
-     */
 
+    private String url;         //链接地址
     private int evaluatePoint;  //向上过滤
     private Date updateTime;
 
@@ -302,17 +301,18 @@ public class LianjiaHouse {
     }
 
     public static void main(String[] args) {
-        LianjiaHouse lianjiaHouse = new LianjiaHouse("17,539元/平", "160万",
+        LianjiaHouse lianjiaHouse = new LianjiaHouse("title", "17,539元/平", "160万",
                 "91.23m²", "高楼层/7", "1999年",
                 "2室2厅1厨1卫", "19,410元/平", "1999年06月25日",
-                "洪山区，武昌火车站", "2017.07.11", "南 北", "精装");
+                "洪山区，武昌火车站", "2017.07.11", "南 北", "精装", "url");
         System.err.println(lianjiaHouse.toString());
     }
 
     public LianjiaHouse() {
     }
 
-    public LianjiaHouse(String price, String total, String size, String floor, String buildTime, String shape, String priceAvg, String lastSale, String position, String putOut, String direction, String decorate) {
+    public LianjiaHouse(String title, String price, String total, String size, String floor, String buildTime, String shape, String priceAvg, String lastSale, String position, String putOut, String direction, String decorate, String url) {
+        this.title = title;
         this.price = price;
         if (null != price) {
             int idx2 = price.indexOf("元/平"), idx1 = price.indexOf(",");
@@ -345,7 +345,16 @@ public class LianjiaHouse {
         this.putOut = putOut;
         this.direction = direction;
         this.decorate = decorate;
+        this.url = url;
         this.evaluatePoint = calculate();
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getPrice() {
@@ -514,6 +523,14 @@ public class LianjiaHouse {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     @Override

@@ -73,8 +73,8 @@ public class Controller {
     }
 
     @RequestMapping("ljCount")
-    public String ljCount() {
-        return lianjiaDao.count().toString();
+    public String ljCount(@ModelAttribute LianjiaHouse house) {
+        return lianjiaDao.count(house).toString();
     }
 
     @RequestMapping("ljPosition")
