@@ -48,6 +48,7 @@ public class Controller {
                 try {
                     CrawlController ljCtl = new CrawlController(config, pageFetcher, robotstxtServer);
                     ljCtl.addSeed("https://m.lianjia.com/wh/ershoufang/104100457642.html");
+                    Thread.sleep(5000);
                     ljCtl.start(LianjiaCrawler.class, threadNum);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -58,7 +59,7 @@ public class Controller {
         /**
          * TODO:暂停
          */
-//        ljThread.start();
+        ljThread.start();
     }
 
     @RequestMapping("lj")

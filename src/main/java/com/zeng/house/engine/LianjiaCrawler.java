@@ -49,20 +49,22 @@ public class LianjiaCrawler extends WebCrawler {
             String title = document.title(), url = page.getWebURL().getURL();
             String price = null, total = null, size = null, floor = null,
                     buildTime = null, shape = null, priceAvg = null, lastSale = null,
-                    position = null, putOut = null, direction = null, decorate = null;
+                    position = null, putOut = null, direction = null, decorate = null,
+                    elevator = null, property = null;
             Elements shortC = document.getElementsByClass("short");
             Elements info_li = document.getElementsByClass("info_li");
             Elements house_model_tit = document.getElementsByClass("house_model_tit");
-            Elements red_big = document.getElementsByClass("red big");
+            Elements similar_data_detail = document.getElementsByClass("similar_data_detail");
+            Elements marker_title = document.getElementsByClass("marker_title");
             List<Node> childNodes;
             String key, value;
             for (Element element : shortC) {
+                if (element.getElementsByClass("gray").isEmpty()) {
+                    continue;
+                }
                 childNodes = element.childNodes();
                 key = ((TextNode) (childNodes.get(0).childNode(0))).text();
                 value = ((TextNode) childNodes.get(1)).text();
-                /**
-                 * TODO：电梯，权属直接过滤
-                 */
                 if (key.contains("挂牌")) {
                     putOut = value;
                 } else if (key.contains("单价")) {
@@ -73,18 +75,56 @@ public class LianjiaCrawler extends WebCrawler {
                     decorate = value;
                 } else if (key.contains("年代")) {
                     buildTime = value;
+                } else if (key.contains("电梯")) {
+                    elevator = value;
+                } else if (key.contains("权属")) {
+                    property = value;
+                } else if (key.contains("楼层")) {
+                    floor = value;
                 }
             }
             for (Element element : info_li) {
+                key = element.getElementsByClass("info_title").get(0).text();
+                value = element.getElementsByClass("info_content").get(0).text();
+                if (key.contains("房源户型")) {
+                    shape = value;
+                } else if (key.contains("建筑面积")) {
+                    size = value;
+                } else if (key.contains("上次交易")) {
+                    lastSale = value;
+                } else if (key.contains("产权所属")) {
+                    property = value;
+                }
             }
             for (Element element : house_model_tit) {
+                if (element.getElementsByClass("red").isEmpty()) {
+                    continue;
+                }
+                childNodes = element.childNodes();
+                value = ((TextNode) (childNodes.get(1).childNode(0))).text();
+                key = ((TextNode) childNodes.get(0)).text();
+                if (key.contains("参考均价")) {
+                    priceAvg = value;
+                    break;
+                }
             }
-            for (Element element : red_big) {
+            for (Element element : similar_data_detail) {
+                key = element.getElementsByClass("gray").get(0).text();
+                value = element.getElementsByClass("red").get(0).getElementsByTag("span").get(0).text();
+                if (key.contains("售价")) {
+                    total = value;
+                    break;
+                }
+            }
+            if (null != marker_title && !marker_title.isEmpty()) {
+                position = marker_title.get(0).text();
             }
             LianjiaHouse house = new LianjiaHouse(title, price, total, size,
                     floor, buildTime, shape, priceAvg, lastSale, position,
-                    putOut, direction, decorate, url);
+                    putOut, direction, decorate, elevator, property, url);
             dao.insert(house);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

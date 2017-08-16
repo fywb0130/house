@@ -20,6 +20,8 @@ public class LianjiaHouse {
     public static int putOutW = 8;     //挂牌时间
     public static int directionW = 5;  //朝向
     public static int decorateW = 11;  //装修
+    public static int elevatorW = 10;  //电梯
+    public static int propertyW = 10;  //权属
 
     /**
      * 分值规则
@@ -106,6 +108,8 @@ public class LianjiaHouse {
     private Float putOutF;      //向上过滤
     private String direction;   //转化为南，其他，相同过滤
     private String decorate;    //转化为毛，简，精，相同过滤
+    private String elevator;
+    private String property;
 
     private String url;         //链接地址
     private int evaluatePoint;  //向上过滤
@@ -124,6 +128,8 @@ public class LianjiaHouse {
         int putOutP = getPutOutPoint(putOut);
         int directionP = getDirectionPoint(direction);
         int decorateP = getDecoratePoint(decorate);
+        int elevatorP = getElevatorPoint(elevator);
+        int propertyP = getPropertyPoint(property);
 
         evaluatePoint = priceP * priceW
                 + totalP * totalW
@@ -136,9 +142,33 @@ public class LianjiaHouse {
                 + positionP * positionW
                 + putOutP * putOutW
                 + directionP * directionW
-                + decorateP * decorateW;
+                + decorateP * decorateW
+                + elevatorP * elevatorW
+                + propertyP * propertyW;
 
         return evaluatePoint;
+    }
+
+    private int getElevatorPoint(String elevator) {
+        if (null != elevator && !elevator.isEmpty()) {
+            if (elevator.contains("有电梯")) {
+                return 100;
+            } else {
+                return 0;
+            }
+        } else {
+            return 50;
+        }
+    }
+
+    private int getPropertyPoint(String property) {
+        if (null == property || property.isEmpty()) {
+            return 50;
+        }
+        if (property.contains("商品房")) {
+            return 100;
+        }
+        return 0;
     }
 
     private int getDecoratePoint(String decorate) {
@@ -304,14 +334,18 @@ public class LianjiaHouse {
         LianjiaHouse lianjiaHouse = new LianjiaHouse("title", "17,539元/平", "160万",
                 "91.23m²", "高楼层/7", "1999年",
                 "2室2厅1厨1卫", "19,410元/平", "1999年06月25日",
-                "洪山区，武昌火车站", "2017.07.11", "南 北", "精装", "url");
+                "洪山区，武昌火车站", "2017.07.11", "南 北",
+                "精装", "有电梯", "商品房", "url");
         System.err.println(lianjiaHouse.toString());
     }
 
     public LianjiaHouse() {
     }
 
-    public LianjiaHouse(String title, String price, String total, String size, String floor, String buildTime, String shape, String priceAvg, String lastSale, String position, String putOut, String direction, String decorate, String url) {
+    public LianjiaHouse(String title, String price, String total, String size,
+                        String floor, String buildTime, String shape, String priceAvg,
+                        String lastSale, String position, String putOut, String direction,
+                        String decorate, String elevator, String property, String url) {
         this.title = title;
         this.price = price;
         if (null != price) {
@@ -345,6 +379,8 @@ public class LianjiaHouse {
         this.putOut = putOut;
         this.direction = direction;
         this.decorate = decorate;
+        this.elevator = elevator;
+        this.property = property;
         this.url = url;
         this.evaluatePoint = calculate();
     }
@@ -531,6 +567,22 @@ public class LianjiaHouse {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getElevator() {
+        return elevator;
+    }
+
+    public void setElevator(String elevator) {
+        this.elevator = elevator;
+    }
+
+    public String getProperty() {
+        return property;
+    }
+
+    public void setProperty(String property) {
+        this.property = property;
     }
 
     @Override
