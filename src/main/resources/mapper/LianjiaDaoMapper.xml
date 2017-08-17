@@ -8,6 +8,52 @@
             *
         FROM house_lj
         <where>
+            <if test="house.priceF != null">
+                AND #{house.priceF} >= priceF
+            </if>
+            <if test="house.totalF != null" >
+                AND #{house.totalF} >= totalF
+            </if>
+            <if test="house.sizeF != null">
+                AND sizeF >= #{house.sizeF}
+            </if>
+            <if test="house.buildTimeF != null">
+                AND buildTimeF >= #{house.buildTimeF}
+            </if>
+            <if test="house.lastSaleF != null">
+                AND #{house.lastSaleF} >= lastSaleF
+            </if>
+            <if test="house.putOutF != null">
+                AND putOutF >= #{house.putOutF}
+            </if>
+            <if test="house.shape != null">
+                AND shape >= #{house.shape}
+            </if>
+            <if test="house.position != null">
+                AND position = #{house.position}
+            </if>
+            <if test="house.direction != null">
+                and direction = #{house.direction}
+            </if>
+            <if test="house.decorate != null">
+                AND decorate = #{house.decorate}
+            </if>
+            <if test="house.elevator != null">
+                AND elevator = #{house.elevator}
+            </if>
+            <if test="house.property != null">
+                AND property = #{house.property}
+            </if>
+            ORDER BY evaluatePoint DESC
+            limit #{limit}
+        </where>
+    </select>
+
+    <select id="count" resultType="long">
+        SELECT
+            COUNT(*)
+        FROM house_lj
+        <where>
             <if test="priceF != null">
                 AND #{priceF} >= priceF
             </if>
@@ -38,18 +84,22 @@
             <if test="decorate != null">
                 AND decorate = #{decorate}
             </if>
-            ORDER BY evaluatePoint DESC
-            limit #{limit}
+            <if test="elevator != null">
+                AND elevator = #{elevator}
+            </if>
+            <if test="property != null">
+                AND property = #{property}
+            </if>
         </where>
     </select>
 
     <insert id="insert" parameterType="com.zeng.house.bean.LianjiaHouse">
-        insert into house_lj(price, priceF, total, totalF, size, sizeF, floor, buildTime,
+        insert into house_lj(title, price, priceF, total, totalF, size, sizeF, floor, buildTime,
         buildTimeF, shape, priceAvg, priceAvgF, lastSale, lastSaleF, position, putOut,
-        putOutF, direction, decorate, evaluatePoint)
-        values(#{price}, #{priceF}, #{total}, #{totalF}, #{size}, #{sizeF}, #{floor}, #{buildTime},
+        putOutF, direction, decorate, elevator, property, url, evaluatePoint)
+        values(#{title}, #{price}, #{priceF}, #{total}, #{totalF}, #{size}, #{sizeF}, #{floor}, #{buildTime},
         #{buildTimeF}, #{shape}, #{priceAvg}, #{priceAvgF}, #{lastSale}, #{lastSaleF}, #{position}, #{putOut},
-        #{putOutF}, #{direction}, #{decorate}, #{evaluatePoint})
+        #{putOutF}, #{direction}, #{decorate}, #{elevator}, #{property}, #{url}, #{evaluatePoint})
     </insert>
 
 </mapper>

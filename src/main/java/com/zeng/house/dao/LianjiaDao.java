@@ -2,6 +2,7 @@ package com.zeng.house.dao;
 
 import com.zeng.house.bean.LianjiaHouse;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -10,7 +11,7 @@ import java.util.List;
  */
 @Mapper
 public interface LianjiaDao {
-    List<LianjiaHouse> select(LianjiaHouse house, Integer limit);
+    List<LianjiaHouse> select(@Param("house") LianjiaHouse house, @Param("limit") Integer limit);
 
     Long count(LianjiaHouse house);
 

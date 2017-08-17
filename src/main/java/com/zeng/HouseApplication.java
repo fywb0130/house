@@ -6,9 +6,9 @@ import org.springframework.context.ApplicationContext;
 
 @SpringBootApplication
 public class HouseApplication {
-	public static ApplicationContext ac;
+    public static ApplicationContext ac;
 
-	public static void main(String[] args) {
-		ac = SpringApplication.run(HouseApplication.class, args);
-	}
+    public static void main(String[] args) {
+        ac = SpringApplication.run(HouseApplication.class, args);
+    }
 }

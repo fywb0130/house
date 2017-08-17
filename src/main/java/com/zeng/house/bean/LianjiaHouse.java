@@ -21,7 +21,7 @@ public class LianjiaHouse {
     public static int directionW = 5;  //朝向
     public static int decorateW = 11;  //装修
     public static int elevatorW = 10;  //电梯
-    public static int propertyW = 10;  //权属
+    public static int propertyW = 10;  //产权属性
 
     /**
      * 分值规则
@@ -152,6 +152,7 @@ public class LianjiaHouse {
     private int getElevatorPoint(String elevator) {
         if (null != elevator && !elevator.isEmpty()) {
             if (elevator.contains("有电梯")) {
+                this.elevator = "有电梯";
                 return 100;
             } else {
                 return 0;
@@ -166,6 +167,7 @@ public class LianjiaHouse {
             return 50;
         }
         if (property.contains("商品房")) {
+            this.property = "商品房";
             return 100;
         }
         return 0;
@@ -228,9 +230,7 @@ public class LianjiaHouse {
         if (null == putOut || putOut.isEmpty()) {
             return 0;
         }
-        int year = Integer.parseInt(putOut.substring(0, 4))
-                , month = Integer.parseInt(putOut.substring(5, 7))
-                , day = Integer.parseInt(putOut.substring(8, 10));
+        int year = Integer.parseInt(putOut.substring(0, 4)), month = Integer.parseInt(putOut.substring(5, 7)), day = Integer.parseInt(putOut.substring(8, 10));
         putOutF = (float) (year + month / 12.0 + day / 365.0);
         Date nowD = new Date();
         int y = nowD.getYear() + 1900, m = nowD.getMonth() + 1, d = nowD.getDate();
@@ -256,8 +256,11 @@ public class LianjiaHouse {
             return 0;
         }
         this.buildTimeF = Float.parseFloat(age.substring(0, 4));
-        if (this.buildTimeF >  2015) {
+        if (this.buildTimeF > 2015) {
             return 50;
+        }
+        if (this.buildTimeF > 2012) {
+            return 80;
         }
         return (int) ((this.buildTimeF - 1998) * 6);
     }
@@ -355,7 +358,7 @@ public class LianjiaHouse {
         }
         this.size = size;
         if (null != size) {
-            int idx = size.indexOf("m");
+            int idx = size.indexOf("㎡");
             sizeF = Float.parseFloat(size.substring(0, idx));
         }
         this.total = total;

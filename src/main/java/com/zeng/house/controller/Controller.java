@@ -48,7 +48,7 @@ public class Controller {
                 try {
                     CrawlController ljCtl = new CrawlController(config, pageFetcher, robotstxtServer);
                     ljCtl.addSeed("https://m.lianjia.com/wh/ershoufang/104100457642.html");
-                    Thread.sleep(5000);
+                    Thread.sleep(30000);
                     ljCtl.start(LianjiaCrawler.class, threadNum);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -56,16 +56,13 @@ public class Controller {
             }
         });
 
-        /**
-         * TODO:暂停
-         */
         ljThread.start();
     }
 
     @RequestMapping("lj")
     public String lj(@ModelAttribute LianjiaHouse house, @RequestParam Integer limit) {
         List<LianjiaHouse> houseList = lianjiaDao.select(house, limit);
-        return "lj";
+        return JsonUtil.toJson(houseList);
     }
 
     @RequestMapping("ljState")
@@ -81,13 +78,5 @@ public class Controller {
     @RequestMapping("ljPosition")
     public String ljPosition() {
         return JsonUtil.toJson(LianjiaHouse.positionV.keySet());
-    }
-
-    @RequestMapping("ti")
-    public String ti() {
-        LianjiaHouse house = new LianjiaHouse();
-        house.setPrice("1234");
-        lianjiaDao.insert(house);
-        return "ti";
     }
 }

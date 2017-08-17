@@ -7,17 +7,12 @@ import edu.uci.ics.crawler4j.crawler.Page;
 import edu.uci.ics.crawler4j.crawler.WebCrawler;
 import edu.uci.ics.crawler4j.parser.HtmlParseData;
 import edu.uci.ics.crawler4j.url.WebURL;
-import org.apache.tika.metadata.Metadata;
-import org.apache.tika.parser.ParseContext;
-import org.apache.tika.parser.html.HtmlParser;
-import org.apache.tika.sax.BodyContentHandler;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import java.util.List;
 import java.util.regex.Pattern;
@@ -38,13 +33,11 @@ public class LianjiaCrawler extends WebCrawler {
     @Override
     public boolean shouldVisit(Page referringPage, WebURL url) {
         return PATTERN.matcher(url.getURL()).matches();
-//        return url.getURL().startsWith("https://m.lianjia.com/wh/ershoufang/") && url.getURL().endsWith(".html");
     }
 
     @Override
     public void visit(Page page) {
         try {
-            System.err.println("visit: " + page.getWebURL().getURL());
             Document document = Jsoup.parse(((HtmlParseData) page.getParseData()).getHtml());
             String title = document.title(), url = page.getWebURL().getURL();
             String price = null, total = null, size = null, floor = null,
@@ -57,13 +50,21 @@ public class LianjiaCrawler extends WebCrawler {
             Elements similar_data_detail = document.getElementsByClass("similar_data_detail");
             Elements marker_title = document.getElementsByClass("marker_title");
             List<Node> childNodes;
+            Elements ets;
             String key, value;
             for (Element element : shortC) {
                 if (element.getElementsByClass("gray").isEmpty()) {
                     continue;
                 }
                 childNodes = element.childNodes();
-                key = ((TextNode) (childNodes.get(0).childNode(0))).text();
+                if (null == childNodes || childNodes.size() < 2) {
+                    continue;
+                }
+                Node node = childNodes.get(0);
+                if (node.childNodeSize() < 1) {
+                    continue;
+                }
+                key = ((TextNode) (node.childNode(0))).text();
                 value = ((TextNode) childNodes.get(1)).text();
                 if (key.contains("挂牌")) {
                     putOut = value;
@@ -84,8 +85,16 @@ public class LianjiaCrawler extends WebCrawler {
                 }
             }
             for (Element element : info_li) {
-                key = element.getElementsByClass("info_title").get(0).text();
-                value = element.getElementsByClass("info_content").get(0).text();
+                ets = element.getElementsByClass("info_title");
+                if (null == ets || ets.isEmpty()) {
+                    continue;
+                }
+                key = ets.get(0).text();
+                ets = element.getElementsByClass("info_content");
+                if (null == ets || ets.isEmpty()) {
+                    continue;
+                }
+                value = ets.get(0).text();
                 if (key.contains("房源户型")) {
                     shape = value;
                 } else if (key.contains("建筑面积")) {
@@ -101,6 +110,13 @@ public class LianjiaCrawler extends WebCrawler {
                     continue;
                 }
                 childNodes = element.childNodes();
+                if (null == childNodes || childNodes.size() < 2) {
+                    continue;
+                }
+                Node node = childNodes.get(1);
+                if (node.childNodeSize() < 1) {
+                    continue;
+                }
                 value = ((TextNode) (childNodes.get(1).childNode(0))).text();
                 key = ((TextNode) childNodes.get(0)).text();
                 if (key.contains("参考均价")) {
@@ -124,7 +140,6 @@ public class LianjiaCrawler extends WebCrawler {
                     putOut, direction, decorate, elevator, property, url);
             dao.insert(house);
         } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }

@@ -22,6 +22,8 @@ putOut VARCHAR(32) comment '挂出时间描述',
 putOutF FLOAT comment '挂出时间',
 direction VARCHAR(32) comment '朝向',
 decorate VARCHAR(32) comment '装修',
+elevator VARCHAR(16) comment '电梯',
+property VARCHAR(16) comment '产权属性',
 url VARCHAR(128) comment '链接地址',
 updateTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) engine=InnoDB DEFAULT charset=utf8mb4 comment='链家数据表';
