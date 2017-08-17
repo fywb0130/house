@@ -29,7 +29,7 @@ public class Controller {
 
     public Controller() throws Exception {
         String storagePath = "./resultData";
-        int threadNum = 1;
+        int threadNum = 10;
 
         CrawlConfig config = new CrawlConfig();
         config.setCrawlStorageFolder(storagePath);

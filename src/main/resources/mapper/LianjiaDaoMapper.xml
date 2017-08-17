@@ -8,6 +8,7 @@
             *
         FROM house_lj
         <where>
+              id > 0
             <if test="house.priceF != null">
                 AND #{house.priceF} >= priceF
             </if>

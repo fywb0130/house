@@ -53,93 +53,108 @@ public class LianjiaCrawler extends WebCrawler {
             Elements ets;
             String key, value;
             for (Element element : shortC) {
-                if (element.getElementsByClass("gray").isEmpty()) {
-                    continue;
-                }
-                childNodes = element.childNodes();
-                if (null == childNodes || childNodes.size() < 2) {
-                    continue;
-                }
-                Node node = childNodes.get(0);
-                if (node.childNodeSize() < 1) {
-                    continue;
-                }
-                key = ((TextNode) (node.childNode(0))).text();
-                value = ((TextNode) childNodes.get(1)).text();
-                if (key.contains("挂牌")) {
-                    putOut = value;
-                } else if (key.contains("单价")) {
-                    price = value;
-                } else if (key.contains("朝向")) {
-                    direction = value;
-                } else if (key.contains("装修")) {
-                    decorate = value;
-                } else if (key.contains("年代")) {
-                    buildTime = value;
-                } else if (key.contains("电梯")) {
-                    elevator = value;
-                } else if (key.contains("权属")) {
-                    property = value;
-                } else if (key.contains("楼层")) {
-                    floor = value;
-                }
+                try {
+                    if (element.getElementsByClass("gray").isEmpty()) {
+                        continue;
+                    }
+                    childNodes = element.childNodes();
+                    if (null == childNodes || childNodes.size() < 2) {
+                        continue;
+                    }
+                    Node node = childNodes.get(0);
+                    if (node.childNodeSize() < 1) {
+                        continue;
+                    }
+                    key = ((TextNode) (node.childNode(0))).text();
+                    value = ((TextNode) childNodes.get(1)).text();
+                    if (key.contains("挂牌")) {
+                        putOut = value;
+                    } else if (key.contains("单价")) {
+                        price = value;
+                    } else if (key.contains("朝向")) {
+                        direction = value;
+                    } else if (key.contains("装修")) {
+                        decorate = value;
+                    } else if (key.contains("年代")) {
+                        buildTime = value;
+                    } else if (key.contains("电梯")) {
+                        elevator = value;
+                    } else if (key.contains("权属")) {
+                        property = value;
+                    } else if (key.contains("楼层")) {
+                        floor = value;
+                    }
+                } catch (Exception e) {}
             }
             for (Element element : info_li) {
-                ets = element.getElementsByClass("info_title");
-                if (null == ets || ets.isEmpty()) {
-                    continue;
-                }
-                key = ets.get(0).text();
-                ets = element.getElementsByClass("info_content");
-                if (null == ets || ets.isEmpty()) {
-                    continue;
-                }
-                value = ets.get(0).text();
-                if (key.contains("房源户型")) {
-                    shape = value;
-                } else if (key.contains("建筑面积")) {
-                    size = value;
-                } else if (key.contains("上次交易")) {
-                    lastSale = value;
-                } else if (key.contains("产权所属")) {
-                    property = value;
-                }
+                try {
+                    ets = element.getElementsByClass("info_title");
+                    if (null == ets || ets.isEmpty()) {
+                        continue;
+                    }
+                    key = ets.get(0).text();
+                    ets = element.getElementsByClass("info_content");
+                    if (null == ets || ets.isEmpty()) {
+                        continue;
+                    }
+                    value = ets.get(0).text();
+                    if (key.contains("房源户型")) {
+                        shape = value;
+                    } else if (key.contains("建筑面积")) {
+                        size = value;
+                    } else if (key.contains("上次交易")) {
+                        lastSale = value;
+                    } else if (key.contains("产权所属")) {
+                        property = value;
+                    }
+                } catch (Exception e) {}
             }
             for (Element element : house_model_tit) {
-                if (element.getElementsByClass("red").isEmpty()) {
-                    continue;
-                }
-                childNodes = element.childNodes();
-                if (null == childNodes || childNodes.size() < 2) {
-                    continue;
-                }
-                Node node = childNodes.get(1);
-                if (node.childNodeSize() < 1) {
-                    continue;
-                }
-                value = ((TextNode) (childNodes.get(1).childNode(0))).text();
-                key = ((TextNode) childNodes.get(0)).text();
-                if (key.contains("参考均价")) {
-                    priceAvg = value;
-                    break;
-                }
+                try {
+                    if (element.getElementsByClass("red").isEmpty()) {
+                        continue;
+                    }
+                    childNodes = element.childNodes();
+                    if (null == childNodes || childNodes.size() < 2) {
+                        continue;
+                    }
+                    Node node = childNodes.get(1);
+                    if (node.childNodeSize() < 1) {
+                        continue;
+                    }
+                    value = ((TextNode) (childNodes.get(1).childNode(0))).text();
+                    key = ((TextNode) childNodes.get(0)).text();
+                    if (key.contains("参考均价")) {
+                        priceAvg = value;
+                        break;
+                    }
+                } catch (Exception e) {}
             }
             for (Element element : similar_data_detail) {
-                key = element.getElementsByClass("gray").get(0).text();
-                value = element.getElementsByClass("red").get(0).getElementsByTag("span").get(0).text();
-                if (key.contains("售价")) {
-                    total = value;
-                    break;
+                try {
+                    key = element.getElementsByClass("gray").get(0).text();
+                    value = element.getElementsByClass("red").get(0).getElementsByTag("span").get(0).text();
+                    if (key.contains("售价")) {
+                        total = value;
+                        break;
+                    }
+                } catch (Exception e) {}
+            }
+            try {
+                if (null != marker_title && !marker_title.isEmpty()) {
+                    position = marker_title.get(0).text();
                 }
-            }
-            if (null != marker_title && !marker_title.isEmpty()) {
-                position = marker_title.get(0).text();
-            }
+            } catch (Exception e) {}
             LianjiaHouse house = new LianjiaHouse(title, price, total, size,
                     floor, buildTime, shape, priceAvg, lastSale, position,
                     putOut, direction, decorate, elevator, property, url);
-            dao.insert(house);
+            try {
+                dao.insert(house);
+            } catch (Exception e) {}
         } catch (Exception e) {
+//            System.err.println(((HtmlParseData) page.getParseData()).getHtml());
+            System.err.println(page.getWebURL().getURL());
+            e.printStackTrace();
         }
     }
 }

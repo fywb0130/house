@@ -25,5 +25,7 @@ decorate VARCHAR(32) comment '装修',
 elevator VARCHAR(16) comment '电梯',
 property VARCHAR(16) comment '产权属性',
 url VARCHAR(128) comment '链接地址',
-updateTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+updateTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+KEY idx_ep(evaluatePoint),
+UNIQUE KEY unq_url(url)
 ) engine=InnoDB DEFAULT charset=utf8mb4 comment='链家数据表';

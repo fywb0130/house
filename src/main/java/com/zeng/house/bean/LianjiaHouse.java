@@ -122,7 +122,7 @@ public class LianjiaHouse {
         int ageP = getAgePoint(buildTime);
         int shapeP = getShapePoint(shape);
         int floorP = getFloorPoint(floor);
-        int priceDiffP = null == priceAvg ? 0 : (int) ((priceAvgF - priceF) / 13.0);
+        int priceDiffP = null == priceAvgF ? 0 : (int) ((priceAvgF - priceF) / 13.0);
         int lastSaleP = getLastSalePoint(lastSale);
         int positionP = getPositionPoint(position);
         int putOutP = getPutOutPoint(putOut);
@@ -190,21 +190,21 @@ public class LianjiaHouse {
     }
 
     private int getPricePoint(String price) {
-        if (null == price || price.isEmpty()) {
+        if (null == price || price.isEmpty() || null == priceF) {
             return 0;
         }
         return (int) ((13000 - priceF) / 30.0);
     }
 
     private int getSizePoint(String size) {
-        if (null == size || size.isEmpty()) {
+        if (null == size || size.isEmpty() || null == sizeF) {
             return 0;
         }
         return (int) ((sizeF - 50) * 2);
     }
 
     private int getTotalPoint(String total) {
-        if (null == total || total.isEmpty()) {
+        if (null == total || total.isEmpty() || null == totalF) {
             return 0;
         }
         return (int) ((150 - totalF) / 0.4);
@@ -230,12 +230,16 @@ public class LianjiaHouse {
         if (null == putOut || putOut.isEmpty()) {
             return 0;
         }
-        int year = Integer.parseInt(putOut.substring(0, 4)), month = Integer.parseInt(putOut.substring(5, 7)), day = Integer.parseInt(putOut.substring(8, 10));
-        putOutF = (float) (year + month / 12.0 + day / 365.0);
-        Date nowD = new Date();
-        int y = nowD.getYear() + 1900, m = nowD.getMonth() + 1, d = nowD.getDate();
-        float nowF = (float) (y + m / 12.0 + d / 365.0);
-        return (int) (((putOutF - nowF) * 365 + 60) * 2);
+        try {
+            int year = Integer.parseInt(putOut.substring(0, 4)), month = Integer.parseInt(putOut.substring(5, 7)), day = Integer.parseInt(putOut.substring(8, 10));
+            putOutF = (float) (year + month / 12.0 + day / 365.0);
+            Date nowD = new Date();
+            int y = nowD.getYear() + 1900, m = nowD.getMonth() + 1, d = nowD.getDate();
+            float nowF = (float) (y + m / 12.0 + d / 365.0);
+            return (int) (((putOutF - nowF) * 365 + 60) * 2);
+        } catch (Exception e) {
+            return 0;
+        }
     }
 
     private int getPositionPoint(String position) {
@@ -255,14 +259,18 @@ public class LianjiaHouse {
         if (null == age || age.isEmpty()) {
             return 0;
         }
-        this.buildTimeF = Float.parseFloat(age.substring(0, 4));
-        if (this.buildTimeF > 2015) {
-            return 50;
+        try {
+            this.buildTimeF = Float.parseFloat(age.substring(0, 4));
+            if (this.buildTimeF > 2015) {
+                return 50;
+            }
+            if (this.buildTimeF > 2012) {
+                return 80;
+            }
+            return (int) ((this.buildTimeF - 1998) * 6);
+        } catch (Exception e) {
+            return 0;
         }
-        if (this.buildTimeF > 2012) {
-            return 80;
-        }
-        return (int) ((this.buildTimeF - 1998) * 6);
     }
 
     private int getFloorPoint(String floor) {
@@ -285,19 +293,21 @@ public class LianjiaHouse {
         }
         String n, t;
         int roomN = 0, livingN = 0, kitchenN = 0, toiletN = 0;
-        for (int i = 1; i < shape.length(); i++) {
-            n = shape.substring(i - 1, i);
-            t = shape.substring(i, i + 1);
-            if ("室".equals(t)) {
-                roomN = Integer.parseInt(n);
-            } else if ("厅".equals(t)) {
-                livingN = Integer.parseInt(n);
-            } else if ("厨".equals(t)) {
-                kitchenN = Integer.parseInt(n);
-            } else if ("卫".equals(t)) {
-                toiletN = Integer.parseInt(n);
+        try {
+            for (int i = 1; i < shape.length(); i++) {
+                n = shape.substring(i - 1, i);
+                t = shape.substring(i, i + 1);
+                if ("室".equals(t)) {
+                    roomN = Integer.parseInt(n);
+                } else if ("厅".equals(t)) {
+                    livingN = Integer.parseInt(n);
+                } else if ("厨".equals(t)) {
+                    kitchenN = Integer.parseInt(n);
+                } else if ("卫".equals(t)) {
+                    toiletN = Integer.parseInt(n);
+                }
             }
-        }
+        } catch (Exception e) {}
         this.shape = roomN + "室" + livingN + "厅" + kitchenN + "厨" + toiletN + "卫";
         return roomN * 18 + livingN * 9 + kitchenN * 15 + toiletN * 15;
     }
@@ -306,31 +316,35 @@ public class LianjiaHouse {
         if (null == lastSale || lastSale.isEmpty()) {
             return 0;
         }
-        String n;
-        int start = 0, year = 0, month = 0, day = 0;
-        for (int i = 1; i < lastSale.length(); i++) {
-            if ("年".equals(lastSale.substring(i, i + 1))) {
-                n = lastSale.substring(start, i);
-                year = Integer.parseInt(n);
-                start = i + 1;
-            } else if ("月".equals(lastSale.substring(i, i + 1))) {
-                n = lastSale.substring(start, i);
-                month = Integer.parseInt(n);
-                start = i + 1;
-            } else if ("日".equals(lastSale.substring(i, i + 1))) {
-                n = lastSale.substring(start, i);
-                day = Integer.parseInt(n);
-                start = i + 1;
+        try {
+            String n;
+            int start = 0, year = 0, month = 0, day = 0;
+            for (int i = 1; i < lastSale.length(); i++) {
+                if ("年".equals(lastSale.substring(i, i + 1))) {
+                    n = lastSale.substring(start, i);
+                    year = Integer.parseInt(n);
+                    start = i + 1;
+                } else if ("月".equals(lastSale.substring(i, i + 1))) {
+                    n = lastSale.substring(start, i);
+                    month = Integer.parseInt(n);
+                    start = i + 1;
+                } else if ("日".equals(lastSale.substring(i, i + 1))) {
+                    n = lastSale.substring(start, i);
+                    day = Integer.parseInt(n);
+                    start = i + 1;
+                }
             }
-        }
-        lastSaleF = (float) (year + month / 12.0 + day / 365.0);
-        Date nowD = new Date();
-        int y = nowD.getYear() + 1900, m = nowD.getMonth() + 1, d = nowD.getDate();
-        float nowF = (float) (y + m / 12.0 + d / 365.0);
-        if (nowF - lastSaleF < 2 || lastSaleF < 2000) {
+            lastSaleF = (float) (year + month / 12.0 + day / 365.0);
+            Date nowD = new Date();
+            int y = nowD.getYear() + 1900, m = nowD.getMonth() + 1, d = nowD.getDate();
+            float nowF = (float) (y + m / 12.0 + d / 365.0);
+            if (nowF - lastSaleF < 2 || lastSaleF < 2000) {
+                return 0;
+            }
+            return (int) ((nowF - lastSaleF) * 12);
+        } catch (Exception e) {
             return 0;
         }
-        return (int) ((nowF - lastSaleF) * 12);
     }
 
     public static void main(String[] args) {
@@ -351,32 +365,40 @@ public class LianjiaHouse {
                         String decorate, String elevator, String property, String url) {
         this.title = title;
         this.price = price;
-        if (null != price) {
-            int idx2 = price.indexOf("元/平"), idx1 = price.indexOf(",");
-            String num = price.substring(0, idx1) + price.substring(idx1 + 1, idx2);
-            priceF = Float.parseFloat(num);
-        }
+        try {
+            if (null != price) {
+                int idx2 = price.indexOf("元/平"), idx1 = price.indexOf(",");
+                String num = price.substring(0, idx1) + price.substring(idx1 + 1, idx2);
+                priceF = Float.parseFloat(num);
+            }
+        } catch (Exception e) {}
         this.size = size;
-        if (null != size) {
-            int idx = size.indexOf("㎡");
-            sizeF = Float.parseFloat(size.substring(0, idx));
-        }
+        try {
+            if (null != size) {
+                int idx = size.indexOf("㎡");
+                sizeF = Float.parseFloat(size.substring(0, idx));
+            }
+        } catch (Exception e) {}
         this.total = total;
-        if (null != total && !total.isEmpty()) {
-            int idx = total.indexOf("万");
-            totalF = Float.parseFloat(total.substring(0, idx));
-        } else if (null != price && null != size) {
-            totalF = (float) (sizeF * priceF / 10000.0);
-        }
+        try {
+            if (null != total && !total.isEmpty()) {
+                int idx = total.indexOf("万");
+                totalF = Float.parseFloat(total.substring(0, idx));
+            } else if (null != price && null != size) {
+                totalF = (float) (sizeF * priceF / 10000.0);
+            }
+        } catch (Exception e) {}
         this.floor = floor;
         this.buildTime = buildTime;
         this.shape = shape;
         this.priceAvg = priceAvg;
-        if (null != priceAvg) {
-            int idx2 = priceAvg.indexOf("元/平"), idx1 = priceAvg.indexOf(",");
-            String num = priceAvg.substring(0, idx1) + priceAvg.substring(idx1 + 1, idx2);
-            priceAvgF = Float.parseFloat(num);
-        }
+        try {
+            if (null != priceAvg) {
+                int idx2 = priceAvg.indexOf("元/平"), idx1 = priceAvg.indexOf(",");
+                String num = priceAvg.substring(0, idx1) + priceAvg.substring(idx1 + 1, idx2);
+                priceAvgF = Float.parseFloat(num);
+            }
+        } catch (Exception e) {}
         this.lastSale = lastSale;
         this.position = position;
         this.putOut = putOut;
@@ -591,7 +613,8 @@ public class LianjiaHouse {
     @Override
     public String toString() {
         return "LianjiaHouse{" +
-                "price='" + price + '\'' +
+                "title='" + title + '\'' +
+                ", price='" + price + '\'' +
                 ", priceF=" + priceF +
                 ", total='" + total + '\'' +
                 ", totalF=" + totalF +
@@ -610,7 +633,11 @@ public class LianjiaHouse {
                 ", putOutF=" + putOutF +
                 ", direction='" + direction + '\'' +
                 ", decorate='" + decorate + '\'' +
+                ", elevator='" + elevator + '\'' +
+                ", property='" + property + '\'' +
+                ", url='" + url + '\'' +
                 ", evaluatePoint=" + evaluatePoint +
+                ", updateTime=" + updateTime +
                 '}';
     }
 }
