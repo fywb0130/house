@@ -10,11 +10,13 @@ import edu.uci.ics.crawler4j.fetcher.PageFetcher;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtConfig;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -28,35 +30,63 @@ public class Controller {
     private LianjiaDao lianjiaDao;
 
     public Controller() throws Exception {
-        String storagePath = "./resultData";
-        int threadNum = 10;
+        start();
+    }
 
-        CrawlConfig config = new CrawlConfig();
-        config.setCrawlStorageFolder(storagePath);
-        config.setIncludeHttpsPages(true);
-        config.setResumableCrawling(true);
-        config.setUserAgentString("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36");
+    private synchronized void start() {
+        // start lianjia job
+        if (null == ljThread || ljThread.getState().equals(Thread.State.TERMINATED)) {
+            String storagePath = "./resultDataLj";
+            int threadNum = 10;
+            deletePath(new File(storagePath));
+            CrawlConfig config = new CrawlConfig();
+            config.setCrawlStorageFolder(storagePath);
+            config.setIncludeHttpsPages(true);
+            config.setResumableCrawling(true);
+            config.setUserAgentString("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36");
 
-        PageFetcher pageFetcher = new PageFetcher(config);
-        RobotstxtConfig robotstxtConfig = new RobotstxtConfig();
-        robotstxtConfig.setEnabled(false);
-        RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher);
+            PageFetcher pageFetcher = new PageFetcher(config);
+            RobotstxtConfig robotstxtConfig = new RobotstxtConfig();
+            robotstxtConfig.setEnabled(false);
+            RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher);
 
-        ljThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    CrawlController ljCtl = new CrawlController(config, pageFetcher, robotstxtServer);
-                    ljCtl.addSeed("https://m.lianjia.com/wh/ershoufang/104100457642.html");
-                    Thread.sleep(30000);
-                    ljCtl.start(LianjiaCrawler.class, threadNum);
-                } catch (Exception e) {
-                    e.printStackTrace();
+            ljThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        CrawlController ljCtl = new CrawlController(config, pageFetcher, robotstxtServer);
+                        ljCtl.addSeed("https://m.lianjia.com/wh/ershoufang/104100457642.html");
+                        Thread.sleep(30000);
+                        ljCtl.start(LianjiaCrawler.class, threadNum);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            ljThread.start();
+        }
+    }
+
+    private boolean deletePath(File dir) {
+        if (!dir.exists()) {
+            return true;
+        }
+        if (dir.isDirectory()) {
+            String[] children = dir.list();
+            for (int i=0; i< children.length; i++) {
+                boolean success = deletePath(new File(dir, children[i]));
+                if (!success) {
+                    return false;
                 }
             }
-        });
+        }
+        return dir.delete();
+    }
 
-        ljThread.start();
+    @Scheduled(cron="12 23 14 * * ?")
+    public void task() {
+        start();
     }
 
     @RequestMapping("lj")
