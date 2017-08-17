@@ -232,7 +232,7 @@ public class LianjiaHouse {
         }
         try {
             int year = Integer.parseInt(putOut.substring(0, 4)), month = Integer.parseInt(putOut.substring(5, 7)), day = Integer.parseInt(putOut.substring(8, 10));
-            putOutF = (float) (year + (month-1) / 12.0 + day / 365.0);
+            putOutF = (float) (year + (month-1) / 12.0 + (day-1) / 365.0);
             Date nowD = new Date();
             int y = nowD.getYear() + 1900, m = nowD.getMonth() + 1, d = nowD.getDate();
             float nowF = (float) (y + m / 12.0 + d / 365.0);
@@ -334,7 +334,7 @@ public class LianjiaHouse {
                     start = i + 1;
                 }
             }
-            lastSaleF = (float) (year + (month-1) / 12.0 + day / 365.0);
+            lastSaleF = (float) (year + (month-1) / 12.0 + (day-1) / 365.0);
             Date nowD = new Date();
             int y = nowD.getYear() + 1900, m = nowD.getMonth() + 1, d = nowD.getDate();
             float nowF = (float) (y + m / 12.0 + d / 365.0);
