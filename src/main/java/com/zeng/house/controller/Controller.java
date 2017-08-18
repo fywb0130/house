@@ -30,7 +30,7 @@ public class Controller {
     private LianjiaDao lianjiaDao;
 
     public Controller() throws Exception {
-        start();
+//        start();
     }
 
     private synchronized void start() {
@@ -84,7 +84,7 @@ public class Controller {
         return dir.delete();
     }
 
-    @Scheduled(cron="12 23 14 * * ?")
+    @Scheduled(cron="12 39 15 * * ?")
     public void task() {
         start();
     }
