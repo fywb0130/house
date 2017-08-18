@@ -84,7 +84,7 @@ public class Controller {
         return dir.delete();
     }
 
-    @Scheduled(cron="12 23 2 * * ?")
+    @Scheduled(cron="12 23 14 * * ?")
     public void task() {
         start();
     }
