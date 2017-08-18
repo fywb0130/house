@@ -30,14 +30,13 @@ public class Controller {
     private LianjiaDao lianjiaDao;
 
     public Controller() throws Exception {
-//        start();
+//        start(10);
     }
 
-    private synchronized void start() {
+    private synchronized void start(int threadNum) {
         // start lianjia job
         if (null == ljThread || ljThread.getState().equals(Thread.State.TERMINATED)) {
             String storagePath = "./resultDataLj";
-            int threadNum = 10;
             deletePath(new File(storagePath));
             CrawlConfig config = new CrawlConfig();
             config.setCrawlStorageFolder(storagePath);
@@ -86,7 +85,7 @@ public class Controller {
 
     @Scheduled(cron="12 39 15 * * ?")
     public void task() {
-        start();
+        start(1);
     }
 
     @RequestMapping("lj")
@@ -96,8 +95,15 @@ public class Controller {
     }
 
     @RequestMapping("ljState")
-    public String ljState() {
-        return ljThread.getState().toString();
+    public String ljState(int state) {
+        if (0 == state) {
+            return null == ljThread ? "NULL" : ljThread.getState().toString();
+        }
+        if (state > 0 && state < 11) {
+            start(state);
+            return "OK";
+        }
+        return "ERROR";
     }
 
     @RequestMapping("ljCount")
