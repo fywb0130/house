@@ -131,20 +131,20 @@ public class LianjiaHouse {
         int elevatorP = getElevatorPoint(elevator);
         int propertyP = getPropertyPoint(property);
 
-        evaluatePoint = priceP * priceW
-                + totalP * totalW
-                + sizeP * sizeW
-                + floorP * floorW
-                + ageP * ageW
-                + shapeP * shapeW
-                + priceDiffP * priceDiffW
-                + lastSaleP * lastSaleW
-                + positionP * positionW
-                + putOutP * putOutW
-                + directionP * directionW
-                + decorateP * decorateW
-                + elevatorP * elevatorW
-                + propertyP * propertyW;
+        evaluatePoint = (priceP < 0 ? 0 : priceP) * priceW
+                + (totalP < 0 ? 0 : totalP) * totalW
+                + (sizeP < 0 ? 0 : sizeP) * sizeW
+                + (floorP < 0 ? 0 : floorP) * floorW
+                + (ageP < 0 ? 0 : ageP) * ageW
+                + (shapeP < 0 ? 0 : shapeP) * shapeW
+                + (priceDiffP < 0 ? 0 : priceDiffP) * priceDiffW
+                + (lastSaleP < 0 ? 0 : lastSaleP) * lastSaleW
+                + (positionP < 0 ? 0 : positionP) * positionW
+                + (putOutP < 0 ? 0 : putOutP) * putOutW
+                + (directionP < 0 ? 0 : directionP) * directionW
+                + (decorateP < 0 ? 0 : decorateP) * decorateW
+                + (elevatorP < 0 ? 0 : elevatorP) * elevatorW
+                + (propertyP < 0 ? 0 : propertyP) * propertyW;
 
         return evaluatePoint;
     }
