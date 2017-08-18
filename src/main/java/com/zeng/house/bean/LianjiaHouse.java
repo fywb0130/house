@@ -111,7 +111,8 @@ public class LianjiaHouse {
     private String elevator;
     private String property;
 
-    private String url;         //链接地址
+    private String url;         //手机链接地址
+    private String pcUrl;       //PC链接地址
     private int evaluatePoint;  //向上过滤
     private Date updateTime;
 
@@ -347,14 +348,14 @@ public class LianjiaHouse {
         }
     }
 
-    public static void main(String[] args) {
-        LianjiaHouse lianjiaHouse = new LianjiaHouse("title", "17,539元/平", "160万",
-                "91.23m²", "高楼层/7", "1999年",
-                "2室2厅1厨1卫", "19,410元/平", "1999年06月25日",
-                "洪山区，武昌火车站", "2017.07.11", "南 北",
-                "精装", "有电梯", "商品房", "url");
-        System.err.println(lianjiaHouse.toString());
-    }
+//    public static void main(String[] args) {
+//        LianjiaHouse lianjiaHouse = new LianjiaHouse("title", "17,539元/平", "160万",
+//                "91.23m²", "高楼层/7", "1999年",
+//                "2室2厅1厨1卫", "19,410元/平", "1999年06月25日",
+//                "洪山区，武昌火车站", "2017.07.11", "南 北",
+//                "精装", "有电梯", "商品房", "url");
+//        System.err.println(lianjiaHouse.toString());
+//    }
 
     public LianjiaHouse() {
     }
@@ -407,6 +408,8 @@ public class LianjiaHouse {
         this.elevator = elevator;
         this.property = property;
         this.url = url;
+        int idx = url.indexOf("ershoufang/") + "ershoufang/".length();
+        this.pcUrl = "https://wh.lianjia.com/ershoufang/" + url.substring(idx);
         this.evaluatePoint = calculate();
     }
 
@@ -608,6 +611,14 @@ public class LianjiaHouse {
 
     public void setProperty(String property) {
         this.property = property;
+    }
+
+    public String getPcUrl() {
+        return pcUrl;
+    }
+
+    public void setPcUrl(String pcUrl) {
+        this.pcUrl = pcUrl;
     }
 
     @Override

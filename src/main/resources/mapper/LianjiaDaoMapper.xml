@@ -95,12 +95,12 @@
     </select>
 
     <insert id="insert" parameterType="com.zeng.house.bean.LianjiaHouse">
-        insert into house_lj(title, price, priceF, total, totalF, size, sizeF, floor, buildTime,
-        buildTimeF, shape, priceAvg, priceAvgF, lastSale, lastSaleF, position, putOut,
-        putOutF, direction, decorate, elevator, property, url, evaluatePoint)
+        insert into house_lj(title, price, priceF, total, totalF, size, sizeF, floor,
+        buildTime, buildTimeF, shape, priceAvg, priceAvgF, lastSale, lastSaleF, position,
+        putOut, putOutF, direction, decorate, elevator, property, url, pcUrl, evaluatePoint)
         values(#{title}, #{price}, #{priceF}, #{total}, #{totalF}, #{size}, #{sizeF}, #{floor}, #{buildTime},
         #{buildTimeF}, #{shape}, #{priceAvg}, #{priceAvgF}, #{lastSale}, #{lastSaleF}, #{position}, #{putOut},
-        #{putOutF}, #{direction}, #{decorate}, #{elevator}, #{property}, #{url}, #{evaluatePoint})
+        #{putOutF}, #{direction}, #{decorate}, #{elevator}, #{property}, #{url}, #{pcUrl}, #{evaluatePoint})
     </insert>
 
 </mapper>
