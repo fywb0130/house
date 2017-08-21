@@ -16,4 +16,7 @@ public interface LianjiaDao {
     Long count(LianjiaHouse house);
 
     void insert(LianjiaHouse house);
+
+	@Select("select url from house_lj order by updateTime desc limit 10")
+	List<String> getSeed();
 }

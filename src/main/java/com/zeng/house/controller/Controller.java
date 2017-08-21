@@ -54,7 +54,14 @@ public class Controller {
                 public void run() {
                     try {
                         CrawlController ljCtl = new CrawlController(config, pageFetcher, robotstxtServer);
-                        ljCtl.addSeed("https://m.lianjia.com/wh/ershoufang/104100457642.html");
+			List<String> seed = lianjiaDao.getSeed();
+			if (null == seed || seed.isEmpty()) {
+                            ljCtl.addSeed("https://m.lianjia.com/wh/ershoufang/104100457642.html");
+			} else {
+			    for(String s : seed) {
+				ljCtl.addSeed(s);
+			    }
+			}
                         Thread.sleep(30000);
                         ljCtl.start(LianjiaCrawler.class, threadNum);
                     } catch (Exception e) {

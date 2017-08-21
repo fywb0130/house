@@ -9,6 +9,9 @@
         FROM house_lj
         <where>
               id > 0
+            <if test="house.title != null">
+                AND title like "%"#{house.title}"%"
+            </if>
             <if test="house.priceF != null">
                 AND #{house.priceF} >= priceF
             </if>
@@ -31,7 +34,7 @@
                 AND shape >= #{house.shape}
             </if>
             <if test="house.position != null">
-                AND position = #{house.position}
+                AND position like "%"#{house.position}"%"
             </if>
             <if test="house.direction != null">
                 and direction = #{house.direction}
@@ -55,6 +58,10 @@
             COUNT(*)
         FROM house_lj
         <where>
+		id > 0
+            <if test="house.title != null">
+                AND title like "%"#{house.title}"%"
+            </if>
             <if test="priceF != null">
                 AND #{priceF} >= priceF
             </if>
@@ -77,7 +84,7 @@
                 AND shape >= #{shape}
             </if>
             <if test="position != null">
-                AND position = #{position}
+                AND position like "%"#{position}"%"
             </if>
             <if test="direction != null">
                 and direction = #{direction}
