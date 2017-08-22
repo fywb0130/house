@@ -59,8 +59,8 @@
         FROM house_lj
         <where>
 		id > 0
-            <if test="house.title != null">
-                AND title like "%"#{house.title}"%"
+            <if test="title != null">
+                AND title like "%"#{title}"%"
             </if>
             <if test="priceF != null">
                 AND #{priceF} >= priceF
